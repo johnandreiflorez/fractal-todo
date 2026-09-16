@@ -1,0 +1,13 @@
+node_modules/
+dist/
+build/
+.env
+*.log
+*.err
+.DS_Store
+coverage/
+.vite/
+test-results/
+playwright-report/
+*.tsbuildinfo
+/package-lock.json
