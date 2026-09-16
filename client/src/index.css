@@ -68,29 +68,29 @@ html[data-tema='oscuro'] {
 
 @theme inline {
   /* Colores semánticos → utilidades: bg-fondo, text-texto, border-borde… */
-  --color-fondo: rgb(var(--fondo) / <alpha-value>);
-  --color-superficie: rgb(var(--superficie) / <alpha-value>);
-  --color-superficie-2: rgb(var(--superficie-2) / <alpha-value>);
-  --color-borde: rgb(var(--borde) / <alpha-value>);
-  --color-borde-fuerte: rgb(var(--borde-fuerte) / <alpha-value>);
-  --color-texto: rgb(var(--texto) / <alpha-value>);
-  --color-texto-suave: rgb(var(--texto-suave) / <alpha-value>);
-  --color-texto-atenuado: rgb(var(--texto-atenuado) / <alpha-value>);
-  --color-primario: rgb(var(--primario) / <alpha-value>);
-  --color-primario-oscuro: rgb(var(--primario-oscuro) / <alpha-value>);
-  --color-primario-suave: rgb(var(--primario-suave) / <alpha-value>);
-  --color-primario-contraste: rgb(var(--primario-contraste) / <alpha-value>);
-  --color-peligro: rgb(var(--peligro) / <alpha-value>);
-  --color-peligro-suave: rgb(var(--peligro-suave) / <alpha-value>);
-  --color-peligro-fuerte: rgb(var(--peligro-fuerte) / <alpha-value>);
-  --color-exito: rgb(var(--exito) / <alpha-value>);
-  --color-exito-suave: rgb(var(--exito-suave) / <alpha-value>);
-  --color-exito-fuerte: rgb(var(--exito-fuerte) / <alpha-value>);
-  --color-atencion: rgb(var(--atencion) / <alpha-value>);
-  --color-atencion-suave: rgb(var(--atencion-suave) / <alpha-value>);
-  --color-atencion-fuerte: rgb(var(--atencion-fuerte) / <alpha-value>);
-  --color-informacion: rgb(var(--informacion) / <alpha-value>);
-  --color-informacion-suave: rgb(var(--informacion-suave) / <alpha-value>);
+  --color-fondo: rgb(var(--fondo));
+  --color-superficie: rgb(var(--superficie));
+  --color-superficie-2: rgb(var(--superficie-2));
+  --color-borde: rgb(var(--borde));
+  --color-borde-fuerte: rgb(var(--borde-fuerte));
+  --color-texto: rgb(var(--texto));
+  --color-texto-suave: rgb(var(--texto-suave));
+  --color-texto-atenuado: rgb(var(--texto-atenuado));
+  --color-primario: rgb(var(--primario));
+  --color-primario-oscuro: rgb(var(--primario-oscuro));
+  --color-primario-suave: rgb(var(--primario-suave));
+  --color-primario-contraste: rgb(var(--primario-contraste));
+  --color-peligro: rgb(var(--peligro));
+  --color-peligro-suave: rgb(var(--peligro-suave));
+  --color-peligro-fuerte: rgb(var(--peligro-fuerte));
+  --color-exito: rgb(var(--exito));
+  --color-exito-suave: rgb(var(--exito-suave));
+  --color-exito-fuerte: rgb(var(--exito-fuerte));
+  --color-atencion: rgb(var(--atencion));
+  --color-atencion-suave: rgb(var(--atencion-suave));
+  --color-atencion-fuerte: rgb(var(--atencion-fuerte));
+  --color-informacion: rgb(var(--informacion));
+  --color-informacion-suave: rgb(var(--informacion-suave));
 
   /* Tipografía */
   --font-sans: var(--fuente-cuerpo);
@@ -111,7 +111,7 @@ html[data-tema='oscuro'] {
   --shadow-modal: 0 24px 48px -12px rgb(15 18 28 / 0.25), 0 8px 16px -8px rgb(15 18 28 / 0.12);
 
   /* Borde por defecto de las utilidades border-* */
-  --default-border-color: rgb(var(--borde) / <alpha-value>);
+  --default-border-color: rgb(var(--borde));
 }
 
 @theme {

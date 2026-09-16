@@ -29,7 +29,7 @@ export function Modal({
       role="presentation"
     >
       <div
-        className="absolute inset-0 bg-black/65 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/75 backdrop-blur-sm"
         onClick={onCerrar}
         aria-hidden="true"
       />
