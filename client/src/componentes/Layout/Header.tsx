@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { LogOut, Moon, Sun } from 'lucide-react';
+import { BotonIcono } from '../../design-system/index.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { cambiarIdioma } from '../../i18n/index.js';
-import styles from './Header.module.css';
 
 export function Header() {
   const { t } = useTranslation();
@@ -16,43 +17,57 @@ export function Header() {
   }, [oscuro]);
 
   return (
-    <header className={styles.encabezado}>
-      <h1 className={styles.titulo}>{t('app.titulo')}</h1>
-      <div className={styles.acciones}>
-        <button
-          className={styles.botonTema}
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b border-borde bg-superficie px-6">
+      <h1 className="font-display text-lg font-semibold text-texto">
+        {t('app.titulo')}
+      </h1>
+
+      <div className="flex items-center gap-2">
+        <BotonIcono
+          etiqueta={
+            oscuro
+              ? t('encabezado.cambiarATemaClaro')
+              : t('encabezado.cambiarATemaOscuro')
+          }
           onClick={() => setOscuro((actual) => !actual)}
-          aria-label={
-            oscuro ? t('encabezado.cambiarATemaClaro') : t('encabezado.cambiarATemaOscuro')
-          }
-          title={
-            oscuro ? t('encabezado.cambiarATemaClaro') : t('encabezado.cambiarATemaOscuro')
-          }
         >
-          {oscuro ? t('encabezado.temaClaro') : t('encabezado.temaOscuro')}
-        </button>
+          {oscuro ? (
+            <Sun className="h-4 w-4" aria-hidden="true" />
+          ) : (
+            <Moon className="h-4 w-4" aria-hidden="true" />
+          )}
+        </BotonIcono>
+
         <button
-          className={styles.botonIdioma}
+          type="button"
           onClick={() => cambiarIdioma('es')}
           aria-label={t('encabezado.idioma')}
           title={t('encabezado.espanol')}
+          className="h-9 cursor-pointer rounded-md border border-borde bg-superficie px-2 text-xs font-semibold text-texto-suave transition-colors hover:border-primario hover:text-primario"
         >
           ES
         </button>
         <button
-          className={styles.botonIdioma}
+          type="button"
           onClick={() => cambiarIdioma('en')}
           aria-label={t('encabezado.idioma')}
           title={t('encabezado.ingles')}
+          className="h-9 cursor-pointer rounded-md border border-borde bg-superficie px-2 text-xs font-semibold text-texto-suave transition-colors hover:border-primario hover:text-primario"
         >
           EN
         </button>
-        <span className={styles.usuario}>
+
+        <span className="hidden text-sm text-texto-suave sm:inline">
           {t('encabezado.usuario', { nombre: usuario?.nombre ?? '' })}
         </span>
-        <button className={styles.botonSalir} onClick={cerrarSesion}>
-          {t('encabezado.salir')}
-        </button>
+
+        <BotonIcono
+          variante="peligro"
+          etiqueta={t('encabezado.salir')}
+          onClick={cerrarSesion}
+        >
+          <LogOut className="h-4 w-4" aria-hidden="true" />
+        </BotonIcono>
       </div>
     </header>
   );
