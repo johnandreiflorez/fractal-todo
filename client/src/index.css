@@ -1,84 +1,156 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-tema='oscuro'], [data-tema='oscuro'] *));
+
+/* ============================================================
+   Julia Design System — tokens semánticos
+   Las utilidades Tailwind se derivan de estos tokens vía @theme.
+   Los valores crudos (rgb) viven SOLO aquí, nunca en componentes.
+   ============================================================ */
+
 :root {
-  --fuente-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --tamano-fuente: 15px;
+  /* Tipografía */
+  --fuente-display: 'Sora Variable', system-ui, sans-serif;
+  --fuente-cuerpo: 'Manrope Variable', system-ui, sans-serif;
 
-  --color-fondo: #f1f5f9;
-  --color-superficie: #ffffff;
-  --color-superficie-2: #f8fafc;
-  --color-borde: #e2e8f0;
-  --color-texto: #0f172a;
-  --color-texto-suave: #64748b;
-  --color-primario: #0ea5e9;
-  --color-primario-oscuro: #0369a1;
-  --color-peligro: #ef4444;
-  --color-exito: #16a34a;
-  --color-atencion: #f59e0b;
-
-  --radio: 10px;
-  --radio-pequeno: 6px;
-  --sombra: 0 1px 3px rgba(2, 6, 23, 0.12);
-  --sombra-mayor: 0 10px 25px rgba(2, 6, 23, 0.15);
-
-  --espacio-1: 4px;
-  --espacio-2: 8px;
-  --espacio-3: 12px;
-  --espacio-4: 16px;
-  --espacio-5: 24px;
-  --espacio-6: 32px;
+  /* Tema claro */
+  --fondo: 247 248 251;
+  --superficie: 255 255 255;
+  --superficie-2: 244 245 248;
+  --borde: 224 227 234;
+  --borde-fuerte: 203 208 217;
+  --texto: 23 25 35;
+  --texto-suave: 88 92 106;
+  --texto-atenuado: 138 143 155;
+  --primario: 99 92 246;
+  --primario-oscuro: 76 70 222;
+  --primario-suave: 235 233 254;
+  --primario-contraste: 255 255 255;
+  --peligro: 220 38 38;
+  --peligro-suave: 254 226 226;
+  --peligro-fuerte: 153 27 27;
+  --exito: 21 128 61;
+  --exito-suave: 220 252 231;
+  --exito-fuerte: 20 83 45;
+  --atencion: 202 138 4;
+  --atencion-suave: 254 249 195;
+  --atencion-fuerte: 133 77 14;
+  --informacion: 2 132 199;
+  --informacion-suave: 224 242 254;
 }
 
 html[data-tema='oscuro'] {
-  --color-fondo: #0f172a;
-  --color-superficie: #1e293b;
-  --color-superficie-2: #334155;
-  --color-borde: #475569;
-  --color-texto: #f1f5f9;
-  --color-texto-suave: #94a3b8;
-  --color-primario: #38bdf8;
-  --color-primario-oscuro: #7dd3fc;
-  --sombra: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --sombra-mayor: 0 10px 25px rgba(0, 0, 0, 0.5);
+  /* Tema oscuro */
+  --fondo: 17 18 24;
+  --superficie: 26 28 36;
+  --superficie-2: 34 37 47;
+  --borde: 45 48 60;
+  --borde-fuerte: 60 64 78;
+  --texto: 234 236 244;
+  --texto-suave: 165 169 182;
+  --texto-atenuado: 122 127 142;
+  --primario: 141 130 255;
+  --primario-oscuro: 170 159 255;
+  --primario-suave: 46 43 74;
+  --primario-contraste: 26 28 36;
+  --peligro: 239 68 68;
+  --peligro-suave: 69 39 40;
+  --peligro-fuerte: 254 202 202;
+  --exito: 34 197 94;
+  --exito-suave: 30 62 44;
+  --exito-fuerte: 187 247 208;
+  --atencion: 245 158 11;
+  --atencion-suave: 63 52 29;
+  --atencion-fuerte: 253 230 190;
+  --informacion: 56 189 248;
+  --informacion-suave: 23 49 63;
 }
 
-* {
-  box-sizing: border-box;
+@theme inline {
+  /* Colores semánticos → utilidades: bg-fondo, text-texto, border-borde… */
+  --color-fondo: rgb(var(--fondo) / <alpha-value>);
+  --color-superficie: rgb(var(--superficie) / <alpha-value>);
+  --color-superficie-2: rgb(var(--superficie-2) / <alpha-value>);
+  --color-borde: rgb(var(--borde) / <alpha-value>);
+  --color-borde-fuerte: rgb(var(--borde-fuerte) / <alpha-value>);
+  --color-texto: rgb(var(--texto) / <alpha-value>);
+  --color-texto-suave: rgb(var(--texto-suave) / <alpha-value>);
+  --color-texto-atenuado: rgb(var(--texto-atenuado) / <alpha-value>);
+  --color-primario: rgb(var(--primario) / <alpha-value>);
+  --color-primario-oscuro: rgb(var(--primario-oscuro) / <alpha-value>);
+  --color-primario-suave: rgb(var(--primario-suave) / <alpha-value>);
+  --color-primario-contraste: rgb(var(--primario-contraste) / <alpha-value>);
+  --color-peligro: rgb(var(--peligro) / <alpha-value>);
+  --color-peligro-suave: rgb(var(--peligro-suave) / <alpha-value>);
+  --color-peligro-fuerte: rgb(var(--peligro-fuerte) / <alpha-value>);
+  --color-exito: rgb(var(--exito) / <alpha-value>);
+  --color-exito-suave: rgb(var(--exito-suave) / <alpha-value>);
+  --color-exito-fuerte: rgb(var(--exito-fuerte) / <alpha-value>);
+  --color-atencion: rgb(var(--atencion) / <alpha-value>);
+  --color-atencion-suave: rgb(var(--atencion-suave) / <alpha-value>);
+  --color-atencion-fuerte: rgb(var(--atencion-fuerte) / <alpha-value>);
+  --color-informacion: rgb(var(--informacion) / <alpha-value>);
+  --color-informacion-suave: rgb(var(--informacion-suave) / <alpha-value>);
+
+  /* Tipografía */
+  --font-sans: var(--fuente-cuerpo);
+  --font-display: var(--fuente-display);
+
+  /* Radio */
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+
+  /* Sombras */
+  --shadow-baja: 0 1px 2px 0 rgb(15 18 28 / 0.05), 0 1px 3px 0 rgb(15 18 28 / 0.06);
+  --shadow-media: 0 4px 6px -1px rgb(15 18 28 / 0.07), 0 2px 4px -2px rgb(15 18 28 / 0.06);
+  --shadow-elevada: 0 12px 24px -4px rgb(15 18 28 / 0.12), 0 6px 12px -6px rgb(15 18 28 / 0.08);
+  --shadow-modal: 0 24px 48px -12px rgb(15 18 28 / 0.25), 0 8px 16px -8px rgb(15 18 28 / 0.12);
+
+  /* Borde por defecto de las utilidades border-* */
+  --default-border-color: rgb(var(--borde) / <alpha-value>);
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
 
-body {
-  font-family: var(--fuente-base);
-  font-size: var(--tamano-fuente);
-  line-height: 1.5;
-  color: var(--color-texto);
-  background-color: var(--color-fondo);
-  -webkit-font-smoothing: antialiased;
-}
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-  color: inherit;
-}
+  body {
+    font-family: var(--fuente-cuerpo);
+    background-color: rgb(var(--fondo) / 1);
+    color: rgb(var(--texto) / 1);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-h1,
-h2,
-h3,
-p {
-  margin: 0;
-}
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
 
-a {
-  color: var(--color-primario);
-  text-decoration: none;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  p {
+    margin: 0;
+  }
 
-#root {
-  min-height: 100vh;
+  #root {
+    min-height: 100vh;
+  }
 }
