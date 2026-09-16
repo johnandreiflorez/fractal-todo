@@ -1,4 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+﻿import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -85,9 +85,9 @@ export function FormularioTarea({ abierto, tarea, onCerrar }: Props) {
         if (evento.target === evento.currentTarget) onCerrar();
       }}
     >
-      <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
+      <div className="absolute inset-0 bg-black/65 backdrop-blur-sm" aria-hidden="true" />
       <form
-        className="relative flex max-h-[85vh] w-full max-w-lg flex-col gap-4 overflow-y-auto rounded-xl border border-borde bg-superficie p-6 shadow-modal"
+        className="relative flex max-h-[85vh] w-full max-w-lg flex-col gap-4 overflow-y-auto rounded-xl border border-borde bg-superficie p-6 shadow-modal animate-modal-in"
         onSubmit={handleSubmit(enviar)}
         noValidate
       >

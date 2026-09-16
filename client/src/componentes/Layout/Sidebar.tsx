@@ -24,7 +24,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className="rounded-xl border border-borde bg-superficie p-4 shadow-baja">
+    <div className="rounded-xl border border-borde bg-superficie p-4 shadow-baja transition-all duration-200 hover:shadow-media">
       <div className="mb-4 flex items-center justify-between gap-2">
         <h2 className="font-display text-sm font-semibold text-texto">
           {t('lateral.categorias')}

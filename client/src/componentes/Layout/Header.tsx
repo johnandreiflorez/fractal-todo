@@ -17,7 +17,7 @@ export function Header() {
   }, [oscuro]);
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b border-borde bg-superficie px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b border-borde-fuerte/40 bg-superficie/95 px-6 shadow-media backdrop-blur-xl">
       <h1 className="font-display text-lg font-semibold text-texto">
         {t('app.titulo')}
       </h1>

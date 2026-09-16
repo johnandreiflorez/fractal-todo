@@ -55,8 +55,8 @@ export function ItemTarea({ tarea, seleccionada, onCambiarSeleccion, onEditar }:
     <li
       className={
         tarea.completada
-          ? 'flex items-start gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja opacity-60'
-          : 'flex items-start gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja'
+          ? 'flex items-start gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja opacity-60 transition-all duration-200'
+          : 'flex animate-rise-in items-start gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja transition-all duration-200 hover:-translate-y-0.5 hover:border-primario/40 hover:shadow-media'
       }
     >
       <input

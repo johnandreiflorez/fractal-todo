@@ -38,7 +38,8 @@ export function Button({
     <button
       type={type}
       className={cx(
-        'inline-flex cursor-pointer select-none items-center justify-center font-medium transition-colors',
+        'inline-flex cursor-pointer select-none items-center justify-center font-medium transition-all',
+        'hover:brightness-105 active:scale-[0.98]',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primario',
         'disabled:pointer-events-none disabled:opacity-50',
         VARIANTES[variante],
