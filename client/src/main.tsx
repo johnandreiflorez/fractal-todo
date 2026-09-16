@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import '@fontsource-variable/sora';
+import '@fontsource-variable/manrope';
 import App from './App';
 import { ErrorBoundary } from './componentes/Comunes/ErrorBoundary';
 import { ProveedorAuth } from './contexto/ContextoAuth';
