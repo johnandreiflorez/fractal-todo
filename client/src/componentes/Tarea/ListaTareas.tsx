@@ -1,17 +1,16 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Plus } from 'lucide-react';
 import { mensajeDeError } from '../../api/cliente.js';
+import { Button, EstadoVacio, IndicadorCarga, MensajeError } from '../../design-system/index.js';
 import { useTareas } from '../../hooks/useTareas.js';
 import type { Tarea } from '../../tipos/index.js';
 import { aFiltrosTareas } from '../../utils/helpers.js';
 import type { OpcionesFiltrosTareas } from '../../utils/helpers.js';
-import { Cargando } from '../Comunes/Cargando.js';
-import { MensajeError } from '../Comunes/MensajeError.js';
 import { BarraAccionesLote } from './BarraAccionesLote.js';
 import { FiltroTareas } from './FiltroTareas.js';
 import { FormularioTarea } from './FormularioTarea.js';
 import { ItemTarea } from './ItemTarea.js';
-import styles from './ListaTareas.module.css';
 
 export function ListaTareas() {
   const { t } = useTranslation();
@@ -46,12 +45,18 @@ export function ListaTareas() {
   };
 
   return (
-    <section className={styles.panel}>
-      <div className={styles.encabezado}>
-        <h1 className={styles.titulo}>{t('tarea.misTareas')}</h1>
-        <button className={styles.botonNueva} onClick={() => setCreando(true)}>
+    <section className="flex flex-col gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-display text-2xl font-bold text-texto">
+          {t('tarea.misTareas')}
+        </h1>
+        <Button
+          variante="primario"
+          icono={<Plus className="h-4 w-4" aria-hidden="true" />}
+          onClick={() => setCreando(true)}
+        >
           {t('tarea.nuevaTarea')}
-        </button>
+        </Button>
       </div>
 
       <FiltroTareas valor={filtros} onChange={setFiltros} />
@@ -64,9 +69,10 @@ export function ListaTareas() {
       )}
 
       {idsVisibles.length > 0 && (
-        <label className={styles.seleccionTodas}>
+        <label className="inline-flex w-fit cursor-pointer items-center gap-2 text-sm text-texto-suave">
           <input
             type="checkbox"
+            className="h-4 w-4 accent-primario"
             checked={todasSeleccionadas}
             onChange={alternarSeleccionTodas}
           />
@@ -74,21 +80,22 @@ export function ListaTareas() {
         </label>
       )}
 
-      {isPending && <Cargando texto={t('comunes.cargandoTareas')} />}
+      {isPending && <IndicadorCarga texto={t('comunes.cargandoTareas')} />}
 
       {isError && (
         <MensajeError
           mensaje={mensajeDeError(error)}
+          textoReintentar={t('comunes.reintentar')}
           onReintentar={() => void refetch()}
         />
       )}
 
       {!isPending && !isError && (tareas?.length ?? 0) === 0 && (
-        <p className={styles.vacio}>{t('tarea.vacio')}</p>
+        <EstadoVacio mensaje={t('tarea.vacio')} />
       )}
 
       {!isPending && !isError && (tareas?.length ?? 0) > 0 && (
-        <ul className={styles.lista}>
+        <ul className="flex flex-col gap-3">
           {tareas?.map((tarea) => (
             <ItemTarea
               key={tarea.id}

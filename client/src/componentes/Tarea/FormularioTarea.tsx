@@ -4,11 +4,11 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { mensajeDeError } from '../../api/cliente.js';
+import { AreaTexto, Button, Campo, Entrada, Selector } from '../../design-system/index.js';
 import { useCategorias } from '../../hooks/useCategorias.js';
 import { useActualizarTarea, useCrearTarea } from '../../hooks/useTareas.js';
-import { SelectorEtiquetas } from '../Etiqueta/SelectorEtiquetas.js';
 import type { Tarea } from '../../tipos/index.js';
-import styles from './FormularioTarea.module.css';
+import { SelectorEtiquetas } from '../Etiqueta/SelectorEtiquetas.js';
 
 const esquema = z.object({
   titulo: z.string().trim().min(1, 'errores.titulo_obligatorio').max(255, 'errores.titulo_max255'),
@@ -79,113 +79,100 @@ export function FormularioTarea({ abierto, tarea, onCerrar }: Props) {
 
   return (
     <div
-      className={styles.trasfondo}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      role="presentation"
       onClick={(evento) => {
         if (evento.target === evento.currentTarget) onCerrar();
       }}
-      role="presentation"
     >
-      <form className={styles.formulario} onSubmit={handleSubmit(enviar)} noValidate>
-        <h2 className={styles.titulo}>
+      <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
+      <form
+        className="relative flex max-h-[85vh] w-full max-w-lg flex-col gap-4 overflow-y-auto rounded-xl border border-borde bg-superficie p-6 shadow-modal"
+        onSubmit={handleSubmit(enviar)}
+        noValidate
+      >
+        <h2 className="font-display text-lg font-semibold text-texto">
           {tarea ? t('tarea.tituloEditar') : t('tarea.tituloNueva')}
         </h2>
 
-        <label className={styles.etiqueta} htmlFor="campo-titulo">
-          {t('tarea.titulo')}
-        </label>
-        <input
-          className={styles.campo}
-          id="campo-titulo"
-          placeholder={t('tarea.titulo')}
-          autoFocus
-          {...register('titulo')}
-        />
-        {errors.titulo && <p className={styles.error}>{t(errors.titulo.message ?? '')}</p>}
+        <Campo
+          etiqueta={t('tarea.titulo')}
+          para="campo-titulo"
+          requerido
+          error={errors.titulo ? t(errors.titulo.message ?? '') : undefined}
+        >
+          <Entrada
+            id="campo-titulo"
+            placeholder={t('tarea.titulo')}
+            autoFocus
+            {...register('titulo')}
+          />
+        </Campo>
 
-        <label className={styles.etiqueta} htmlFor="campo-descripcion">
-          {t('tarea.descripcion')}
-        </label>
-        <textarea
-          className={styles.campo}
-          id="campo-descripcion"
-          rows={3}
-          placeholder={t('tarea.descripcion')}
-          {...register('descripcion')}
-        />
-        {errors.descripcion && <p className={styles.error}>{t(errors.descripcion.message ?? '')}</p>}
+        <Campo
+          etiqueta={t('tarea.descripcion')}
+          para="campo-descripcion"
+          error={errors.descripcion ? t(errors.descripcion.message ?? '') : undefined}
+        >
+          <AreaTexto
+            id="campo-descripcion"
+            rows={3}
+            placeholder={t('tarea.descripcion')}
+            {...register('descripcion')}
+          />
+        </Campo>
 
-        <div className={styles.fila}>
-          <div className={styles.grupo}>
-            <label className={styles.etiqueta} htmlFor="campo-prioridad">
-              {t('tarea.prioridad')}
-            </label>
-            <select
-              className={styles.campo}
-              id="campo-prioridad"
-              {...register('prioridad')}
-            >
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Campo etiqueta={t('tarea.prioridad')} para="campo-prioridad">
+            <Selector id="campo-prioridad" {...register('prioridad')}>
               {PRIORIDADES.map((prioridad) => (
                 <option key={prioridad} value={prioridad}>
                   {t(`prioridades.${prioridad}`)}
                 </option>
               ))}
-            </select>
-          </div>
+            </Selector>
+          </Campo>
 
-          <div className={styles.grupo}>
-            <label className={styles.etiqueta} htmlFor="campo-categoria">
-              {t('tarea.categoria')}
-            </label>
-            <select
-              className={styles.campo}
-              id="campo-categoria"
-              {...register('categoria_id')}
-            >
+          <Campo etiqueta={t('tarea.categoria')} para="campo-categoria">
+            <Selector id="campo-categoria" {...register('categoria_id')}>
               <option value="">{t('tarea.sinCategoria')}</option>
               {categorias?.map((categoria) => (
                 <option key={categoria.id} value={categoria.id}>
                   {categoria.nombre}
                 </option>
               ))}
-            </select>
-          </div>
+            </Selector>
+          </Campo>
 
-          <div className={styles.grupo}>
-            <label className={styles.etiqueta} htmlFor="campo-fecha">
-              {t('tarea.vence')}
-            </label>
-            <input
-              className={styles.campo}
-              id="campo-fecha"
-              type="date"
-              {...register('fecha_vencimiento')}
-            />
-          </div>
+          <Campo etiqueta={t('tarea.vence')} para="campo-fecha">
+            <Entrada id="campo-fecha" type="date" {...register('fecha_vencimiento')} />
+          </Campo>
         </div>
 
-        <label className={styles.etiqueta}>{t('tarea.etiquetas')}</label>
-        <SelectorEtiquetas valor={etiquetas} onChange={setEtiquetas} />
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-texto">{t('tarea.etiquetas')}</label>
+          <SelectorEtiquetas valor={etiquetas} onChange={setEtiquetas} />
+        </div>
 
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <p className="text-sm text-peligro-fuerte">{error}</p>}
 
-        <div className={styles.acciones}>
-          <button className={styles.botonGuardar} type="submit" disabled={isSubmitting}>
-            {isSubmitting
-              ? t('tarea.guardando')
-              : tarea
-                ? t('tarea.guardarCambios')
-                : t('tarea.crear')}
-          </button>
-          <button
-            className={styles.botonCancelar}
-            type="button"
+        <div className="flex justify-end gap-2">
+          <Button
+            variante="secundario"
             onClick={() => {
               reset();
               onCerrar();
             }}
           >
             {t('tarea.cancelar')}
-          </button>
+          </Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting
+              ? t('tarea.guardando')
+              : tarea
+                ? t('tarea.guardarCambios')
+                : t('tarea.crear')}
+          </Button>
         </div>
       </form>
     </div>
