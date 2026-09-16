@@ -1,0 +1,234 @@
+# Reto TÃ©cnico Full-Stack - Lista de Tareas
+
+## DescripciÃ³n General
+Desarrolla una aplicaciÃ³n web completa de lista de tareas utilizando React, Node.js y PostgreSQL. Este reto evalÃºa tu capacidad para crear una aplicaciÃ³n web completa con diseÃ±o de base de datos, desarrollo de API y prÃ¡cticas modernas de frontend.
+
+**Tiempo estimado:** 4-6 horas
+
+## Esquema de Base de Datos (PostgreSQL)
+
+Crea las siguientes tablas con las relaciones apropiadas:
+
+```sql
+-- Tabla de usuarios
+CREATE TABLE usuarios (
+...
+);
+
+-- Tabla de categorÃ­as
+CREATE TABLE categorias (
+...
+);
+
+-- Tabla de tareas
+CREATE TABLE tareas (
+...
+);
+
+-- Etiquetas para las tareas (relaciÃ³n muchos a muchos)
+CREATE TABLE etiquetas (
+...
+);
+
+CREATE TABLE tarea_etiquetas (
+...
+);
+```
+
+## Requisitos del Backend (Node.js + Express)
+
+### 1. Endpoints de la API
+Implementa los siguientes endpoints REST:
+
+**AutenticaciÃ³n:**
+- `POST /api/auth/registro` - Registro de usuario
+- `POST /api/auth/login` - Inicio de sesiÃ³n
+- `GET /api/auth/perfil` - Obtener perfil del usuario actual (protegido)
+
+**Tareas:**
+- `GET /api/tareas` - Obtener todas las tareas del usuario autenticado
+- `POST /api/tareas` - Crear nueva tarea
+- `PUT /api/tareas/:id` - Actualizar tarea
+- `DELETE /api/tareas/:id` - Eliminar tarea
+- `PATCH /api/tareas/:id/completar` - Cambiar estado de completado
+
+**CategorÃ­as:**
+- `GET /api/categorias` - Obtener todas las categorÃ­as del usuario
+- `POST /api/categorias` - Crear nueva categorÃ­a
+- `PUT /api/categorias/:id` - Actualizar categorÃ­a
+- `DELETE /api/categorias/:id` - Eliminar categorÃ­a
+
+**Etiquetas:**
+- `GET /api/etiquetas` - Obtener todas las etiquetas del usuario
+- `POST /api/etiquetas` - Crear nueva etiqueta
+
+### 2. Requisitos TÃ©cnicos del Backend
+- Usar JWT para autenticaciÃ³n
+- Implementar manejo adecuado de errores y validaciÃ³n
+- Usar variables de entorno para configuraciÃ³n
+- Incluir middleware de logging de requests
+- Implementar rate limiting
+- Usar consultas parametrizadas para prevenir inyecciÃ³n SQL
+- Incluir cÃ³digos de estado HTTP apropiados
+
+### 3. Funciones de Filtrado
+Soportar los siguientes parÃ¡metros de consulta para GET /api/tareas:
+- `completada` - Filtrar por estado de completado
+- `categoria` - Filtrar por ID de categorÃ­a
+- `prioridad` - Filtrar por nivel de prioridad
+- `fecha_vencimiento` - Filtrar por rango de fecha de vencimiento
+- `busqueda` - Buscar en tÃ­tulo y descripciÃ³n
+- `etiquetas` - Filtrar por nombres de etiquetas
+- `ordenar` - Ordenar por creado_en, fecha_vencimiento, prioridad, o titulo
+- `direccion` - asc o desc
+
+## Requisitos del Frontend (React)
+
+### 1. Estructura de Componentes
+Crea una jerarquÃ­a de componentes bien organizada:
+
+```
+src/
+â”œâ”€â”€ componentes/
+â”‚   â”œâ”€â”€ Auth/
+â”‚   â”‚   â”œâ”€â”€ FormularioLogin.jsx
+â”‚   â”‚   â””â”€â”€ FormularioRegistro.jsx
+â”‚   â”œâ”€â”€ Tarea/
+â”‚   â”‚   â”œâ”€â”€ ListaTareas.jsx
+â”‚   â”‚   â”œâ”€â”€ ItemTarea.jsx
+â”‚   â”‚   â”œâ”€â”€ FormularioTarea.jsx
+â”‚   â”‚   â””â”€â”€ FiltroTareas.jsx
+â”‚   â”œâ”€â”€ Categoria/
+â”‚   â”‚   â”œâ”€â”€ ListaCategorias.jsx
+â”‚   â”‚   â””â”€â”€ FormularioCategoria.jsx
+â”‚   â”œâ”€â”€ Layout/
+â”‚   â”‚   â”œâ”€â”€ Header.jsx
+â”‚   â”‚   â”œâ”€â”€ Sidebar.jsx
+â”‚   â”‚   â””â”€â”€ Layout.jsx
+â”‚   â””â”€â”€ Comunes/
+â”‚       â”œâ”€â”€ Cargando.jsx
+â”‚       â””â”€â”€ MensajeError.jsx
+â”œâ”€â”€ hooks/
+â”‚   â”œâ”€â”€ useAuth.js
+â”‚   â”œâ”€â”€ useTareas.js
+â”‚   â””â”€â”€ useCategorias.js
+â”œâ”€â”€ servicios/
+â”‚   â””â”€â”€ api.js
+â”œâ”€â”€ contexto/
+â”‚   â””â”€â”€ ContextoAuth.jsx
+â””â”€â”€ utils/
+    â””â”€â”€ helpers.js
+```
+
+### 2. Funcionalidades a Implementar
+- AutenticaciÃ³n de usuario (login/registro/logout)
+- Crear, leer, actualizar, eliminar tareas
+- Marcar tareas como completadas/incompletas
+- Organizar tareas por categorÃ­as
+- Agregar/quitar etiquetas a las tareas
+- Filtrar tareas por estado de completado, categorÃ­a, prioridad, fecha de vencimiento
+- Buscar tareas por tÃ­tulo/descripciÃ³n
+- Ordenar tareas por diferentes criterios
+- DiseÃ±o responsivo para mÃ³vil y desktop
+- Estados de carga y manejo de errores
+- ValidaciÃ³n de formularios
+
+### 3. Requisitos TÃ©cnicos del Frontend
+- Usar React hooks (useState, useEffect, useContext)
+- Implementar hooks personalizados para llamadas a la API
+- Usar Context API para el estado de autenticaciÃ³n
+- Implementar error boundaries apropiados
+- Usar CSS modules o styled-components para estilos
+- Incluir indicadores de carga
+- Manejar validaciÃ³n de formularios
+- Implementar actualizaciones optimistas cuando sea apropiado
+
+## CaracterÃ­sticas Bonus (Opcionales)
+- Reordenamiento de tareas con drag and drop
+- Toggle de tema oscuro/claro
+- Dashboard de estadÃ­sticas de tareas
+- Exportar tareas a CSV/JSON
+- Atajos de teclado
+- Actualizaciones en tiempo real usando WebSockets
+- Operaciones en lote (seleccionar mÃºltiples tareas)
+
+## Criterios de EvaluaciÃ³n
+
+### Calidad del CÃ³digo (25%)
+- CÃ³digo limpio, legible y bien organizado
+- Manejo adecuado de errores
+- Convenciones de nomenclatura consistentes
+- ReutilizaciÃ³n y modularidad del cÃ³digo
+
+### Funcionalidad (25%)
+- Todas las caracterÃ­sticas requeridas funcionan correctamente
+- Operaciones CRUD apropiadas
+- Flujo de autenticaciÃ³n funciona
+- Funcionalidad de filtrado y bÃºsqueda
+
+### DiseÃ±o de Base de Datos (20%)
+- Relaciones de tablas apropiadas
+- Consultas eficientes
+- Restricciones de integridad de datos
+
+### DiseÃ±o de API (15%)
+- Principios de API RESTful
+- MÃ©todos HTTP y cÃ³digos de estado apropiados
+- ValidaciÃ³n de request/response
+- Consideraciones de seguridad
+
+### ImplementaciÃ³n del Frontend (15%)
+- Estructura y reutilizaciÃ³n de componentes
+- Manejo del estado
+- Experiencia e interfaz de usuario
+- DiseÃ±o responsivo
+
+---
+
+## Preguntas de Inteligencia de Negocio
+
+DespuÃ©s de completar la implementaciÃ³n tÃ©cnica, proporciona consultas SQL para las siguientes preguntas de negocio. Cada consulta debe estar optimizada y devolver resultados significativos:
+
+### 1. AnÃ¡lisis de ParticipaciÃ³n de Usuarios
+**Pregunta:** Â¿CuÃ¡l es el promedio de tareas creadas por usuario en los Ãºltimos 30 dÃ­as, y cÃ³mo se compara con los 30 dÃ­as anteriores?
+
+### 2. Tendencias de Tasa de Completado
+**Pregunta:** Â¿CuÃ¡l es la tasa de completado diaria de tareas en los Ãºltimos 90 dÃ­as, agrupada por nivel de prioridad?
+
+### 3. Rendimiento por CategorÃ­a
+**Pregunta:** Â¿QuÃ© categorÃ­as tienen las tasas de completado mÃ¡s altas y mÃ¡s bajas, y cuÃ¡l es el tiempo promedio de completado para cada categorÃ­a?
+
+### 4. Patrones de Productividad del Usuario
+**Pregunta:** Â¿CuÃ¡les son las horas pico y dÃ­as de la semana cuando los usuarios crean mÃ¡s tareas, y cuÃ¡ndo las completan?
+
+### 5. AnÃ¡lisis de Tareas Vencidas
+**Pregunta:** Â¿CuÃ¡ntas tareas estÃ¡n actualmente vencidas, agrupadas por usuario y categorÃ­a, y cuÃ¡l es el promedio de dÃ­as que estÃ¡n vencidas?
+
+### 6. EstadÃ­sticas de Uso de Etiquetas
+**Pregunta:** Â¿CuÃ¡les son las etiquetas mÃ¡s frecuentemente utilizadas, y quÃ© etiquetas estÃ¡n asociadas con las tasas de completado mÃ¡s altas?
+
+### 7. MÃ©tricas de RetenciÃ³n de Usuarios
+**Pregunta:** Â¿CuÃ¡ntos usuarios han creado al menos una tarea en cada una de las Ãºltimas 4 semanas, y cuÃ¡l es la tasa de retenciÃ³n semana a semana?
+
+### 8. AnÃ¡lisis de DistribuciÃ³n de Prioridad
+**Pregunta:** Â¿CuÃ¡l es la distribuciÃ³n de tareas a travÃ©s de los niveles de prioridad para usuarios activos (usuarios que han iniciado sesiÃ³n en los Ãºltimos 7 dÃ­as)?
+
+### 9. Tendencias Estacionales
+**Pregunta:** Â¿CÃ³mo varÃ­a la creaciÃ³n y completado de tareas por mes en el Ãºltimo aÃ±o, y hay algÃºn patrÃ³n estacional?
+
+### 10. Benchmarking de Rendimiento
+**Pregunta:** Â¿QuÃ© usuarios estÃ¡n en el 10% superior por tasa de completado de tareas, y cuÃ¡l es el nÃºmero promedio de tareas que manejan simultÃ¡neamente?
+
+---
+
+## Instrucciones de Entrega
+
+1. **Repositorio de CÃ³digo:** Proporciona un repositorio de GitHub con historial de commits claro
+2. **DocumentaciÃ³n:** Incluye un README completo con instrucciones de configuraciÃ³n
+3. **Scripts de Base de Datos:** Incluye scripts de creaciÃ³n de esquema e inserciÃ³n de datos de ejemplo
+4. **DocumentaciÃ³n de API:** Documenta todos los endpoints con ejemplos de request/response
+5. **Consultas SQL:** Proporciona las 10 consultas de inteligencia de negocio con formato de salida esperado
+
+**Tiempo de entrega:** 2-3 dÃ­as calendario desde la recepciÃ³n del reto
+
+**Nota:** EnfÃ³cate en la calidad del cÃ³digo, manejo adecuado de errores y experiencia de usuario. La aplicaciÃ³n debe estar lista para producciÃ³n con medidas de seguridad apropiadas y consideraciones de rendimiento.
