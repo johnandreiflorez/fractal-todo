@@ -90,6 +90,33 @@ Crea una base `todo_list` y aplica los scripts con `psql` (la conexión se confi
 - Recursos en `client/src/i18n/es.ts` y `client/src/i18n/en.ts`. Incluye plurales (`{{count}}`) e interpolación; los mensajes de validación de formularios (Zod) también son claves traducibles.
 - La etiqueta `<html lang>` se sincroniza con el idioma activo.
 
+## Testing
+
+El proyecto incluye una suite de integración en el backend y una suite de extremo a extremo (E2E) en el frontend. Ninguna usa la base de desarrollo: trabajan contra bases dedicadas (`todo_list_test` y `todo_list_e2e`) que se recrean por corrida.
+
+### Backend — Integración (Vitest)
+
+Cubre la API con pruebas reales contra PostgreSQL (migración de esquema + ejecución):
+
+| Comando (server) | Descripción |
+| --- | --- |
+| `npm run test:db:setup` | Recrea la base `todo_list_test` con el esquema vigente |
+| `npm test` | Migra la base y ejecuta las 55 pruebas de integración |
+| `npm run typecheck` | Verificación de tipos (`tsc --noEmit`) |
+
+Suites en `server/tests/`: `auth.test.ts`, `tareas.test.ts`, `filtros.test.ts` y `categorias-etiquetas.test.ts`. Los datos se generan con `emailUnico()` para que cada ejecución quede aislada.
+
+### Frontend — E2E (Playwright + Screenplay)
+
+Validan el flujo completo navegador → Vite → API → PostgreSQL sobre la base `todo_list_e2e`:
+
+| Comando (client) | Descripción |
+| --- | --- |
+| `npm run e2e:install` | Instala el navegador Chromium de Playwright |
+| `npm run e2e` | Levanta API (`:4100`) y app (`:5175`) automáticamente y ejecuta los 17 escenarios |
+
+La capa E2E sigue el patrón **Screenplay** (`client/e2e/`): actores con habilidades, tareas y preguntas de dominio, y page objects que solo usan claves i18n reales (`src/i18n/es.ts`/`en.ts`). Los escenarios cubren autenticación, gestión de tareas (crear/editar/completar/eliminar, filtros, búsqueda, orden y operaciones en lote), categorías y preferencias de idioma y tema.
+
 ## Scripts útiles
 
 | Comando | Descripción |
@@ -99,6 +126,8 @@ Crea una base `todo_list` y aplica los scripts con `psql` (la conexión se confi
 | `npm run dev` (client) | Frontend con Vite (HMR) |
 | `npm run build` (client) | `tsc -b` + build de producción |
 | `npm run lint` (client) | Linter (`oxlint`) |
+| `npm test` (server) | Suite de integración completa (recrea `todo_list_test`) |
+| `npm run e2e` (client) | Suite E2E de Playwright (17 escenarios; arranca API y app) |
 | `npm run preview` (client) | Sirve el build de producción |
 
 ## Endpoints (resumen)
