@@ -29,7 +29,7 @@ export function Modal({
       role="presentation"
     >
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-black/65 backdrop-blur-sm"
         onClick={onCerrar}
         aria-hidden="true"
       />
@@ -37,7 +37,7 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={idTitulo}
-        className={`relative flex max-h-[85vh] w-full ${anchoMaximo} flex-col overflow-hidden rounded-xl border border-borde bg-superficie shadow-modal`}
+        className={`relative flex max-h-[85vh] w-full ${anchoMaximo} flex-col overflow-hidden rounded-xl border border-borde bg-superficie shadow-modal animate-modal-in`}
       >
         <div className="flex items-center justify-between gap-4 border-b border-borde px-6 py-4">
           <h2

@@ -33,7 +33,7 @@ export function FiltroTareas({ valor, onChange }: Props) {
 
   return (
     <div
-      className="flex flex-wrap items-center gap-2 rounded-lg border border-borde bg-superficie p-3 shadow-baja"
+      className="flex animate-fade-in flex-wrap items-center gap-2 rounded-lg border border-borde bg-superficie p-3 shadow-baja transition-all duration-200 hover:shadow-media"
       role="search"
     >
       <Entrada

@@ -30,7 +30,7 @@ export function BotonIcono({
       aria-label={etiqueta}
       title={etiqueta}
       className={cx(
-        'inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md transition-colors',
+        'inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md transition-all active:scale-95',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primario',
         VARIANTES[variante],
         className,
