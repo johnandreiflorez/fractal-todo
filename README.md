@@ -6,7 +6,7 @@ Aplicación web completa de lista de tareas: **React + TypeScript**, **Node.js +
 
 | Capa | Tecnología |
 | --- | --- |
-| Frontend | React 19, Vite 8, TypeScript, TanStack Query 5, React Router 7, React Hook Form + Zod, **i18next + react-i18next**, CSS Modules |
+| Frontend | React 19, Vite 8, TypeScript, Tailwind CSS 4, **Julia DS** (sistema de diseño propio con design tokens), Lucide, TanStack Query 5, React Router 7, React Hook Form + Zod, **i18next + react-i18next** |
 | Backend | Node.js, Express 5, TypeScript, Zod 4, `pg`, JWT (`jsonwebtoken`), `bcryptjs` |
 | Base de datos | PostgreSQL 16 (Docker Compose) |
 
@@ -17,6 +17,7 @@ Aplicación web completa de lista de tareas: **React + TypeScript**, **Node.js +
 │   └── src/
 │       ├── componentes/   # Auth, Tarea, Categoria, Etiqueta, Layout, Comunes
 │       ├── contexto/      # ContextoAuth
+│       ├── design-system/ # Catálogo Julia DS: Button, Badge, Card, Modal, Campo, Entrada, Selector, etc.
 │       ├── hooks/         # useAuth, useTareas, useCategorias, useEtiquetas
 │       ├── i18n/          # Configuración i18next + recursos es/en
 │       ├── servicios/     # Capa de llamadas a la API
@@ -89,6 +90,12 @@ Crea una base `todo_list` y aplica los scripts con `psql` (la conexión se confi
 - Idiomas: **Español** (por defecto) e **Inglés**. Detección automática según el idioma del navegador (con preferencia guardada) y selector ES/EN en el encabezado.
 - Recursos en `client/src/i18n/es.ts` y `client/src/i18n/en.ts`. Incluye plurales (`{{count}}`) e interpolación; los mensajes de validación de formularios (Zod) también son claves traducibles.
 - La etiqueta `<html lang>` se sincroniza con el idioma activo.
+
+## Sistema de diseño (Julia DS)
+
+- Estilos basados en **design tokens** semánticos (colores, tipografía, radios, sombras) definidos en `client/src/index.css` con Tailwind CSS 4 (`@theme inline`).
+- Los componentes de negocio se construyen solo a partir del **catálogo** (`client/src/design-system/`: `Button`, `ButtonIcon`, `Badge`, `Card`, `Modal`, `Field`, `Input`, `Textarea`, `Select`, `Loader`, `ErrorMessage`, `EmptyState`) más iconos de **Lucide**.
+- Temas claro/oscuro vía tokens y utilidades `dark:`; sin colores hardcodeados fuera de la definición de tokens.
 
 ## Testing
 
