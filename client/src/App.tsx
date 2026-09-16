@@ -1,6 +1,6 @@
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Cargando } from './componentes/Comunes/Cargando.js';
+import { IndicadorCarga } from './design-system/index.js';
 import { Layout } from './componentes/Layout/Layout.js';
 import { useAuth } from './hooks/useAuth.js';
 import { LoginPage } from './pages/LoginPage.js';
@@ -11,7 +11,7 @@ function RutaPrivada() {
   const { t } = useTranslation();
   const { usuario, cargando } = useAuth();
   const ubicacion = useLocation();
-  if (cargando) return <Cargando texto={t('comunes.cargandoSesion')} />;
+  if (cargando) return <IndicadorCarga texto={t('comunes.cargandoSesion')} />;
   if (!usuario) {
     return <Navigate to="/login" replace state={{ desde: ubicacion.pathname }} />;
   }
@@ -21,7 +21,7 @@ function RutaPrivada() {
 function RutaPublica() {
   const { t } = useTranslation();
   const { usuario, cargando } = useAuth();
-  if (cargando) return <Cargando texto={t('comunes.cargandoSesion')} />;
+  if (cargando) return <IndicadorCarga texto={t('comunes.cargandoSesion')} />;
   if (usuario) return <Navigate to="/" replace />;
   return <Outlet />;
 }

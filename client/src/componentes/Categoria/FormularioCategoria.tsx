@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { mensajeDeError } from '../../api/cliente.js';
+import { Button, Campo, Entrada } from '../../design-system/index.js';
 import { useCrearCategoria } from '../../hooks/useCategorias.js';
-import styles from './FormularioCategoria.module.css';
 
 const esquema = z.object({
   nombre: z
@@ -46,33 +46,40 @@ export function FormularioCategoria({ onCreada, onCancelar }: Props) {
   };
 
   return (
-    <form className={styles.formulario} onSubmit={handleSubmit(enviar)}>
-      <input
-        className={styles.campo}
-        placeholder={t('categoria.nombre')}
-        aria-label={t('categoria.nombre')}
-        {...register('nombre')}
-      />
-      {errors.nombre && <p className={styles.error}>{t(errors.nombre.message ?? '')}</p>}
-      <div className={styles.filaColor}>
-        <label className={styles.etiquetaColor} htmlFor="color-categoria">
-          {t('categoria.color')}
-        </label>
-        <input
-          className={styles.color}
+    <form className="flex flex-col gap-3" onSubmit={handleSubmit(enviar)} noValidate>
+      <Campo
+        etiqueta={t('categoria.nombre')}
+        para="campo-categoria-nombre"
+        error={errors.nombre ? t(errors.nombre.message ?? '') : undefined}
+      >
+        <Entrada
+          id="campo-categoria-nombre"
+          placeholder={t('categoria.nombre')}
+          aria-label={t('categoria.nombre')}
+          {...register('nombre')}
+        />
+      </Campo>
+
+      <Campo
+        etiqueta={t('categoria.color')}
+        para="color-categoria"
+        error={errors.color ? t(errors.color.message ?? '') : undefined}
+      >
+        <Entrada
           id="color-categoria"
           type="color"
+          className="h-9 w-16 cursor-pointer p-1"
           {...register('color')}
         />
-      </div>
-      {error && <p className={styles.error}>{error}</p>}
-      <div className={styles.acciones}>
-        <button className={styles.botonGuardar} type="submit">
-          {t('categoria.guardar')}
-        </button>
-        <button className={styles.botonCancelar} type="button" onClick={onCancelar}>
+      </Campo>
+
+      {error && <p className="text-sm text-peligro-fuerte">{error}</p>}
+
+      <div className="flex justify-end gap-2">
+        <Button variante="secundario" type="button" onClick={onCancelar}>
           {t('categoria.cancelar')}
-        </button>
+        </Button>
+        <Button type="submit">{t('categoria.guardar')}</Button>
       </div>
     </form>
   );

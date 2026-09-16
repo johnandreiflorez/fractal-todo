@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
+import { X } from 'lucide-react';
+import { BotonIcono } from '../../design-system/index.js';
 import type { Categoria } from '../../tipos/index.js';
-import styles from './ListaCategorias.module.css';
 
 interface Props {
   categorias: Categoria[];
@@ -11,26 +12,30 @@ export function ListaCategorias({ categorias, onEliminar }: Props) {
   const { t } = useTranslation();
 
   if (categorias.length === 0) {
-    return <p className={styles.vacio}>{t('lateral.sinCategorias')}</p>;
+    return <p className="text-sm text-texto-atenuado">{t('lateral.sinCategorias')}</p>;
   }
 
   return (
-    <ul className={styles.lista}>
+    <ul className="flex flex-col gap-1">
       {categorias.map((categoria) => (
-        <li key={categoria.id} className={styles.item}>
+        <li key={categoria.id} className="flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-superficie-2">
           <span
-            className={styles.punto}
-            style={{ backgroundColor: categoria.color ?? 'var(--color-primario)' }}
+            className="h-2.5 w-2.5 shrink-0 rounded-full"
+            style={{
+              backgroundColor: categoria.color ?? 'rgb(var(--primario))',
+            }}
           />
-          <span className={styles.nombre}>{categoria.nombre}</span>
-          <button
-            className={styles.botonEliminar}
+          <span className="min-w-0 flex-1 truncate text-sm text-texto">
+            {categoria.nombre}
+          </span>
+          <BotonIcono
+            variante="fantasma"
+            etiqueta={t('lateral.eliminarCategoriaTitulo')}
             onClick={() => onEliminar(categoria.id)}
-            aria-label={t('lateral.eliminarCategoriaAria', { nombre: categoria.nombre })}
-            title={t('lateral.eliminarCategoriaTitulo')}
+            className="h-7 w-7"
           >
-            ×
-          </button>
+            <X className="h-4 w-4" aria-hidden="true" />
+          </BotonIcono>
         </li>
       ))}
     </ul>

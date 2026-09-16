@@ -2,7 +2,7 @@ import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
 import { withTranslation } from 'react-i18next';
 import type { WithTranslation } from 'react-i18next';
-import styles from './ErrorBoundary.module.css';
+import { Button } from '../../design-system/index.js';
 
 interface Props {
   children: ReactNode;
@@ -27,15 +27,20 @@ class ErrorBoundaryBase extends Component<Props & WithTranslation, Estado> {
     const { t, children } = this.props;
     if (this.state.error) {
       return (
-        <div className={styles.contenedor} role="alert">
-          <h2 className={styles.titulo}>{t('comunes.algoSaliomal')}</h2>
-          <p className={styles.mensaje}>{this.state.error.message}</p>
-          <button
-            className={styles.boton}
+        <div
+          className="flex min-h-dvh flex-col items-center justify-center gap-4 p-6 text-center"
+          role="alert"
+        >
+          <h2 className="font-display text-xl font-semibold text-texto">
+            {t('comunes.algoSaliomal')}
+          </h2>
+          <p className="max-w-md text-sm text-texto-suave">{this.state.error.message}</p>
+          <Button
+            variante="secundario"
             onClick={() => this.setState({ error: null })}
           >
             {t('comunes.volverAIntentar')}
-          </button>
+          </Button>
         </div>
       );
     }
