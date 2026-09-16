@@ -55,42 +55,43 @@ export function ItemTarea({ tarea, seleccionada, onCambiarSeleccion, onEditar }:
     <li
       className={
         tarea.completada
-          ? 'flex items-start gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja opacity-60 transition-all duration-200'
-          : 'flex animate-rise-in items-start gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja transition-all duration-200 hover:-translate-y-0.5 hover:border-primario/40 hover:shadow-media'
+          ? 'flex flex-col gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja opacity-60 transition-all duration-200 sm:flex-row sm:items-start'
+          : 'flex animate-rise-in flex-col gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja transition-all duration-200 hover:-translate-y-0.5 hover:border-primario/40 hover:shadow-media sm:flex-row sm:items-start'
       }
     >
-      <input
-        type="checkbox"
-        className="mt-1.5 h-4 w-4 shrink-0 accent-primario"
-        checked={seleccionada}
-        onChange={(evento) => onCambiarSeleccion(tarea.id, evento.target.checked)}
-        aria-label={t('tarea.seleccionarAria', { titulo: tarea.titulo })}
-      />
-
-      <BotonIcono
-        etiqueta={
-          tarea.completada ? t('tarea.marcarPendiente') : t('tarea.marcarCompletada')
-        }
-        onClick={() => void manejarCompletar()}
-      >
-        {tarea.completada ? (
-          <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
-        ) : (
-          <Circle className="h-5 w-5" aria-hidden="true" />
-        )}
-      </BotonIcono>
+      <div className="flex items-center gap-3">
+        <input
+          type="checkbox"
+          className="h-4 w-4 shrink-0 accent-primario"
+          checked={seleccionada}
+          onChange={(evento) => onCambiarSeleccion(tarea.id, evento.target.checked)}
+          aria-label={t('tarea.seleccionarAria', { titulo: tarea.titulo })}
+        />
+        <div className="flex items-center gap-1.5">
+          <BotonIcono
+            etiqueta={tarea.completada ? t('tarea.marcarPendiente') : t('tarea.marcarCompletada')}
+            onClick={() => void manejarCompletar()}
+          >
+            {tarea.completada ? (
+              <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
+            ) : (
+              <Circle className="h-5 w-5" aria-hidden="true" />
+            )}
+          </BotonIcono>
+        </div>
+      </div>
 
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <span
+        <div className="flex flex-wrap items-start gap-3">
+          <h3
             className={
               tarea.completada
-                ? 'titulo-tarea min-w-0 flex-1 truncate font-semibold text-texto line-through'
-                : 'titulo-tarea min-w-0 flex-1 truncate font-semibold text-texto'
+                ? 'min-w-0 flex-1 truncate font-semibold text-texto line-through'
+                : 'min-w-0 flex-1 truncate font-semibold text-texto'
             }
           >
             {tarea.titulo}
-          </span>
+          </h3>
           <span
             className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold"
             style={{ backgroundColor: COLORES_PRIORIDAD[tarea.prioridad] ?? 'transparent' }}
