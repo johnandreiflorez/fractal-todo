@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
+import { Button, Entrada, Selector } from '../../design-system/index.js';
 import { useCategorias } from '../../hooks/useCategorias.js';
 import { useEtiquetas } from '../../hooks/useEtiquetas.js';
 import type { OpcionesFiltrosTareas } from '../../utils/helpers.js';
-import styles from './FiltroTareas.module.css';
 
 interface Props {
   valor: OpcionesFiltrosTareas;
@@ -32,9 +32,12 @@ export function FiltroTareas({ valor, onChange }: Props) {
     (valor.etiquetas?.length ?? 0) > 0;
 
   return (
-    <div className={styles.filtros} role="search">
-      <input
-        className={styles.campo}
+    <div
+      className="flex flex-wrap items-center gap-2 rounded-lg border border-borde bg-superficie p-3 shadow-baja"
+      role="search"
+    >
+      <Entrada
+        className="w-full md:w-48"
         type="search"
         placeholder={t('tarea.buscar')}
         value={valor.busqueda ?? ''}
@@ -42,8 +45,8 @@ export function FiltroTareas({ valor, onChange }: Props) {
         aria-label={t('tarea.buscarAria')}
       />
 
-      <select
-        className={styles.campo}
+      <Selector
+        className="w-full sm:w-40"
         value={completada}
         onChange={(evento) => {
           const valorEstado = evento.target.value;
@@ -57,10 +60,10 @@ export function FiltroTareas({ valor, onChange }: Props) {
         <option value="">{t('tarea.todas')}</option>
         <option value="false">{t('tarea.pendientes')}</option>
         <option value="true">{t('tarea.completadas')}</option>
-      </select>
+      </Selector>
 
-      <select
-        className={styles.campo}
+      <Selector
+        className="w-full sm:w-40"
         value={valor.categoria ?? ''}
         onChange={(evento) => {
           const text = evento.target.value;
@@ -74,10 +77,10 @@ export function FiltroTareas({ valor, onChange }: Props) {
             {categoria.nombre}
           </option>
         ))}
-      </select>
+      </Selector>
 
-      <select
-        className={styles.campo}
+      <Selector
+        className="w-full sm:w-40"
         value={valor.prioridad ?? ''}
         onChange={(evento) => {
           const text = evento.target.value;
@@ -91,26 +94,26 @@ export function FiltroTareas({ valor, onChange }: Props) {
             {t(`prioridades.${prioridad}`)}
           </option>
         ))}
-      </select>
+      </Selector>
 
-      <input
-        className={styles.campo}
+      <Entrada
+        className="w-full sm:w-40"
         type="date"
         value={valor.desde ?? ''}
         onChange={(evento) => actualizar({ desde: evento.target.value })}
         aria-label={t('tarea.desde')}
       />
 
-      <input
-        className={styles.campo}
+      <Entrada
+        className="w-full sm:w-40"
         type="date"
         value={valor.hasta ?? ''}
         onChange={(evento) => actualizar({ hasta: evento.target.value })}
         aria-label={t('tarea.hasta')}
       />
 
-      <select
-        className={styles.campo}
+      <Selector
+        className="w-full sm:w-44"
         value={valor.etiquetas?.[0] ?? ''}
         onChange={(evento) => {
           const nombre = evento.target.value;
@@ -124,10 +127,10 @@ export function FiltroTareas({ valor, onChange }: Props) {
             {etiqueta.nombre}
           </option>
         ))}
-      </select>
+      </Selector>
 
-      <select
-        className={styles.campo}
+      <Selector
+        className="w-full sm:w-44"
         value={valor.ordenar ?? 'creado_en'}
         onChange={(evento) =>
           actualizar({
@@ -140,10 +143,10 @@ export function FiltroTareas({ valor, onChange }: Props) {
         <option value="fecha_vencimiento">{t('tarea.ordenarVencimiento')}</option>
         <option value="prioridad">{t('tarea.ordenarPrioridad')}</option>
         <option value="titulo">{t('tarea.ordenarTitulo')}</option>
-      </select>
+      </Selector>
 
-      <select
-        className={styles.campo}
+      <Selector
+        className="w-full sm:w-40"
         value={valor.direccion ?? 'desc'}
         onChange={(evento) =>
           actualizar({
@@ -154,12 +157,12 @@ export function FiltroTareas({ valor, onChange }: Props) {
       >
         <option value="desc">{t('tarea.descendente')}</option>
         <option value="asc">{t('tarea.ascendente')}</option>
-      </select>
+      </Selector>
 
       {hayFiltros && (
-        <button className={styles.limpiar} onClick={() => onChange({})}>
+        <Button variante="fantasma" tamano="sm" onClick={() => onChange({})}>
           {t('tarea.limpiar')}
-        </button>
+        </Button>
       )}
     </div>
   );

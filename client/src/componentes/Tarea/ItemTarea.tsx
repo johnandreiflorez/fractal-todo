@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CheckCircle2, Circle, Pencil, Trash2 } from 'lucide-react';
 import { mensajeDeError } from '../../api/cliente.js';
+import { Badge, BotonIcono, Button } from '../../design-system/index.js';
 import { useCompletarTarea, useEliminarTarea } from '../../hooks/useTareas.js';
 import { COLORES_PRIORIDAD, formatearFecha } from '../../utils/helpers.js';
 import type { Tarea } from '../../tipos/index.js';
-import styles from './ItemTarea.module.css';
 
 interface Props {
   tarea: Tarea;
@@ -51,45 +52,63 @@ export function ItemTarea({ tarea, seleccionada, onCambiarSeleccion, onEditar }:
   };
 
   return (
-    <li className={`${styles.item} ${tarea.completada ? styles.completada : ''}`}>
+    <li
+      className={
+        tarea.completada
+          ? 'flex items-start gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja opacity-60'
+          : 'flex items-start gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja'
+      }
+    >
       <input
-        className={styles.seleccion}
         type="checkbox"
+        className="mt-1.5 h-4 w-4 shrink-0 accent-primario"
         checked={seleccionada}
         onChange={(evento) => onCambiarSeleccion(tarea.id, evento.target.checked)}
         aria-label={t('tarea.seleccionarAria', { titulo: tarea.titulo })}
       />
 
-      <button
-        className={styles.botonCompletar}
-        onClick={() => void manejarCompletar()}
-        aria-label={
+      <BotonIcono
+        etiqueta={
           tarea.completada ? t('tarea.marcarPendiente') : t('tarea.marcarCompletada')
         }
-        title={
-          tarea.completada ? t('tarea.deshacerCompletado') : t('tarea.completar')
-        }
+        onClick={() => void manejarCompletar()}
       >
-        {tarea.completada ? '✓' : '○'}
-      </button>
+        {tarea.completada ? (
+          <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
+        ) : (
+          <Circle className="h-5 w-5" aria-hidden="true" />
+        )}
+      </BotonIcono>
 
-      <div className={styles.cuerpo}>
-        <div className={styles.tituloFila}>
-          <span className={styles.titulo}>{tarea.titulo}</span>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
           <span
-            className={styles.insigniaPrioridad}
+            className={
+              tarea.completada
+                ? 'titulo-tarea min-w-0 flex-1 truncate font-semibold text-texto line-through'
+                : 'titulo-tarea min-w-0 flex-1 truncate font-semibold text-texto'
+            }
+          >
+            {tarea.titulo}
+          </span>
+          <span
+            className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold"
             style={{ backgroundColor: COLORES_PRIORIDAD[tarea.prioridad] ?? 'transparent' }}
           >
             {t(`prioridades.${tarea.prioridad}`)}
           </span>
         </div>
 
-        {tarea.descripcion && <p className={styles.descripcion}>{tarea.descripcion}</p>}
+        {tarea.descripcion && (
+          <p className="mt-1 whitespace-pre-wrap text-sm text-texto-suave">
+            {tarea.descripcion}
+          </p>
+        )}
 
-        <div className={styles.meta}>
+        <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
           {tarea.categoria_nombre && (
             <span
-              className={styles.categoria}
+              className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold"
               style={{
                 color: tarea.categoria_color ?? undefined,
                 borderColor: tarea.categoria_color ?? undefined,
@@ -98,28 +117,33 @@ export function ItemTarea({ tarea, seleccionada, onCambiarSeleccion, onEditar }:
               #{tarea.categoria_nombre}
             </span>
           )}
-          <span className={vencida ? styles.fechaVencida : styles.fecha}>
+          <span className={vencida ? 'text-peligro-fuerte' : 'text-texto-atenuado'}>
             {tarea.fecha_vencimiento
               ? formatearFecha(tarea.fecha_vencimiento)
               : t('tarea.sinFecha')}
           </span>
           {tarea.etiquetas.map((nombre) => (
-            <span key={nombre} className={styles.etiqueta}>
+            <Badge key={nombre} variante="neutro">
               {nombre}
-            </span>
+            </Badge>
           ))}
         </div>
 
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <p className="mt-2 text-sm text-peligro-fuerte">{error}</p>}
       </div>
 
-      <div className={styles.acciones}>
-        <button className={styles.botonEditar} onClick={() => onEditar(tarea)}>
+      <div className="flex shrink-0 gap-1.5">
+        <Button tamano="sm" icono={<Pencil className="h-4 w-4" aria-hidden="true" />} onClick={() => onEditar(tarea)}>
           {t('tarea.editar')}
-        </button>
-        <button className={styles.botonEliminar} onClick={() => void manejarEliminar()}>
+        </Button>
+        <Button
+          tamano="sm"
+          variante="peligro"
+          icono={<Trash2 className="h-4 w-4" aria-hidden="true" />}
+          onClick={() => void manejarEliminar()}
+        >
           {t('tarea.eliminar')}
-        </button>
+        </Button>
       </div>
     </li>
   );

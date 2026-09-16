@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { mensajeDeError } from '../../api/cliente.js';
+import { Button, Selector } from '../../design-system/index.js';
 import { useCategorias } from '../../hooks/useCategorias.js';
 import {
   useActualizarTareasEnLote,
   useEliminarTareasEnLote,
 } from '../../hooks/useTareas.js';
-import styles from './BarraAccionesLote.module.css';
 
 interface Props {
   ids: number[];
@@ -35,13 +35,17 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
   };
 
   return (
-    <div className={styles.barra} role="group" aria-label={t('tarea.accionesLoteAria')}>
-      <span className={styles.resumen}>
+    <div
+      className="flex flex-wrap items-center gap-2 rounded-lg border border-borde bg-superficie p-3 shadow-baja"
+      role="group"
+      aria-label={t('tarea.accionesLoteAria')}
+    >
+      <span className="mr-2 text-sm font-medium text-texto">
         {t('tarea.seleccionadas', { count: ids.length })}
       </span>
 
-      <button
-        className={styles.boton}
+      <Button
+        tamano="sm"
         disabled={ocupado}
         onClick={() =>
           void ejecutar(() =>
@@ -50,10 +54,11 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
         }
       >
         {t('tarea.completar')}
-      </button>
+      </Button>
 
-      <button
-        className={styles.boton}
+      <Button
+        tamano="sm"
+        variante="secundario"
         disabled={ocupado}
         onClick={() =>
           void ejecutar(() =>
@@ -62,10 +67,10 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
         }
       >
         {t('tarea.reabrir')}
-      </button>
+      </Button>
 
-      <select
-        className={styles.campo}
+      <Selector
+        className="w-40"
         disabled={ocupado}
         defaultValue=""
         aria-label={t('tarea.prioridadLoteAria')}
@@ -86,10 +91,10 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
             {t(`prioridades.${prioridad}`)}
           </option>
         ))}
-      </select>
+      </Selector>
 
-      <select
-        className={styles.campo}
+      <Selector
+        className="w-44"
         disabled={ocupado}
         defaultValue=""
         aria-label={t('tarea.categoriaLoteAria')}
@@ -113,10 +118,11 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
             {categoria.nombre}
           </option>
         ))}
-      </select>
+      </Selector>
 
-      <button
-        className={styles.peligro}
+      <Button
+        tamano="sm"
+        variante="peligro"
         disabled={ocupado}
         onClick={() => {
           if (window.confirm(t('tarea.eliminarConfirmLote', { count: ids.length }))) {
@@ -125,9 +131,9 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
         }}
       >
         {t('tarea.eliminar')}
-      </button>
+      </Button>
 
-      {error && <span className={styles.error}>{error}</span>}
+      {error && <span className="w-full text-sm text-peligro-fuerte">{error}</span>}
     </div>
   );
 }
