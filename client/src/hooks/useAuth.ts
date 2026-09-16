@@ -1,0 +1,1 @@
+export { useAuth } from '../contexto/ContextoAuth.js';
