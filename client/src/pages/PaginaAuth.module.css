@@ -1,0 +1,28 @@
+.pantalla {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espacio-4);
+  background: linear-gradient(
+    160deg,
+    var(--color-fondo),
+    var(--color-superficie) 60%
+  );
+}
+
+.tarjeta {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--espacio-6);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background-color: var(--color-superficie);
+  box-shadow: var(--sombra-mayor);
+}
+
+.titulo {
+  font-size: 1.3rem;
+  margin: 0 0 var(--espacio-4);
+  text-align: center;
+}
