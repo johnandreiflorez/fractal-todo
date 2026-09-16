@@ -10,16 +10,23 @@ export const veBotonDeSalir = () =>
 
 export const idiomaEs = (esperado: Idioma) =>
   pregunta(`el idioma debe ser "${esperado}"`, async (actor) => {
-    const actual = await actor.pagina().evaluate(
-      () => document.documentElement.lang,
-    );
-    expect(actual).toBe(esperado);
+    await expect
+      .poll(
+        () => actor.pagina().evaluate(() => document.documentElement.lang),
+        { message: `el idioma debe ser "${esperado}"` },
+      )
+      .toBe(esperado);
   });
 
 export const temaEs = (esperado: 'oscuro' | 'claro') =>
   pregunta(`el tema debe ser "${esperado}"`, async (actor) => {
-    const actual = await actor.pagina().evaluate(
-      () => document.documentElement.dataset.tema,
-    );
-    expect(actual).toBe(esperado);
+    await expect
+      .poll(
+        () =>
+          actor.pagina().evaluate(
+            () => document.documentElement.dataset.tema ?? null,
+          ),
+        { message: `el tema debe ser "${esperado}"` },
+      )
+      .toBe(esperado);
   });
