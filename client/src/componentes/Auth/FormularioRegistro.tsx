@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { mensajeDeError } from '../../api/cliente.js';
+import { Button, Entrada } from '../../design-system/index.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { registrar } from '../../servicios/auth.service.js';
-import styles from './FormularioAuth.module.css';
 
 const esquema = z
   .object({
@@ -57,54 +57,61 @@ export function FormularioRegistro() {
   };
 
   return (
-    <form className={styles.formulario} onSubmit={handleSubmit(enviar)} noValidate>
-      <input
-        className={styles.campo}
+    <form className="flex flex-col gap-3" onSubmit={handleSubmit(enviar)} noValidate>
+      <Entrada
         placeholder={t('auth.nombre')}
         autoComplete="name"
         aria-label={t('auth.nombre')}
         {...register('nombre')}
       />
-      {errors.nombre && <p className={styles.error}>{t(errors.nombre.message ?? '')}</p>}
+      {errors.nombre && (
+        <p className="text-sm text-peligro-fuerte">{t(errors.nombre.message ?? '')}</p>
+      )}
 
-      <input
-        className={styles.campo}
+      <Entrada
         type="email"
         placeholder={t('auth.email')}
         autoComplete="email"
         aria-label={t('auth.email')}
         {...register('email')}
       />
-      {errors.email && <p className={styles.error}>{t(errors.email.message ?? '')}</p>}
+      {errors.email && (
+        <p className="text-sm text-peligro-fuerte">{t(errors.email.message ?? '')}</p>
+      )}
 
-      <input
-        className={styles.campo}
+      <Entrada
         type="password"
         placeholder={t('auth.passwordLargo')}
         autoComplete="new-password"
         aria-label={t('auth.passwordLargo')}
         {...register('password')}
       />
-      {errors.password && <p className={styles.error}>{t(errors.password.message ?? '')}</p>}
+      {errors.password && (
+        <p className="text-sm text-peligro-fuerte">{t(errors.password.message ?? '')}</p>
+      )}
 
-      <input
-        className={styles.campo}
+      <Entrada
         type="password"
         placeholder={t('auth.passwordConfirmar')}
         autoComplete="new-password"
         aria-label={t('auth.passwordConfirmar')}
         {...register('confirmacion')}
       />
-      {errors.confirmacion && <p className={styles.error}>{t(errors.confirmacion.message ?? '')}</p>}
+      {errors.confirmacion && (
+        <p className="text-sm text-peligro-fuerte">{t(errors.confirmacion.message ?? '')}</p>
+      )}
 
-      {error && <p className={styles.error}>{error}</p>}
+      {error && <p className="text-sm text-peligro-fuerte">{error}</p>}
 
-      <button className={styles.boton} type="submit" disabled={isSubmitting}>
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? t('auth.creandoCuenta') : t('auth.crearCuenta')}
-      </button>
+      </Button>
 
-      <p className={styles.enlace}>
-        {t('auth.conCuenta')} <Link to="/login">{t('auth.iniciaSesion')}</Link>
+      <p className="text-center text-sm text-texto-suave">
+        {t('auth.conCuenta')}{' '}
+        <Link className="font-medium text-primario hover:underline" to="/login">
+          {t('auth.iniciaSesion')}
+        </Link>
       </p>
     </form>
   );
