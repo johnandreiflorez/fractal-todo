@@ -45,7 +45,7 @@ export class PaginaTareas extends Pagina {
   }
 
   titulos(): Locator {
-    return this.lista().getByRole('listitem').locator('span[class*="titulo"]');
+    return this.lista().getByRole('listitem').getByRole('heading', { level: 3 });
   }
 
   botonEditar(titulo: string): Locator {
