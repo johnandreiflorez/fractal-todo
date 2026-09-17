@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { mensajeDeError } from '../../api/cliente.js';
 import { Button, Campo, Entrada } from '../../design-system/index.js';
-import { useCrearCategoria } from '../../hooks/useCategorias.js';
+import { useActualizarCategoria, useCrearCategoria } from '../../hooks/useCategorias.js';
+import type { Categoria } from '../../tipos/index.js';
 
 const esquema = z.object({
   nombre: z
@@ -19,27 +20,40 @@ const esquema = z.object({
 type Campos = z.infer<typeof esquema>;
 
 interface Props {
-  onCreada: () => void;
+  categoria?: Categoria | null;
+  onGuardada: () => void;
   onCancelar: () => void;
 }
 
-export function FormularioCategoria({ onCreada, onCancelar }: Props) {
+export function FormularioCategoria({ categoria, onGuardada, onCancelar }: Props) {
   const { t } = useTranslation();
   const crear = useCrearCategoria();
+  const actualizar = useActualizarCategoria();
   const [error, setError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
-  } = useForm<Campos>({ resolver: zodResolver(esquema) });
+    formState: { errors, isSubmitting },
+  } = useForm<Campos>({
+    resolver: zodResolver(esquema),
+    defaultValues: {
+      nombre: categoria?.nombre ?? '',
+      color: categoria?.color ?? undefined,
+    },
+  });
 
   const enviar = async (valores: Campos) => {
     try {
       setError(null);
-      await crear.mutateAsync({ nombre: valores.nombre, color: valores.color || null });
+      const datos = { nombre: valores.nombre, color: valores.color || null };
+      if (categoria) {
+        await actualizar.mutateAsync({ id: categoria.id, datos });
+      } else {
+        await crear.mutateAsync(datos);
+      }
       reset();
-      onCreada();
+      onGuardada();
     } catch (e) {
       setError(mensajeDeError(e));
     }
@@ -76,10 +90,17 @@ export function FormularioCategoria({ onCreada, onCancelar }: Props) {
       {error && <p className="text-sm text-peligro-fuerte">{error}</p>}
 
       <div className="flex justify-end gap-2">
-        <Button variante="secundario" type="button" onClick={onCancelar}>
+        <Button
+          variante="secundario"
+          type="button"
+          disabled={isSubmitting}
+          onClick={onCancelar}
+        >
           {t('categoria.cancelar')}
         </Button>
-        <Button type="submit">{t('categoria.guardar')}</Button>
+        <Button type="submit" cargando={isSubmitting}>
+          {categoria ? t('categoria.actualizar') : t('categoria.guardar')}
+        </Button>
       </div>
     </form>
   );

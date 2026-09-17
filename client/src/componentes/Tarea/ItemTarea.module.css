@@ -1,0 +1,67 @@
+/*
+ * Toque personalizado de la tarjeta de tarea (complementa Tailwind).
+ * El acento lateral toma el color del token semántico de la prioridad,
+ * por lo que respeta el tema claro/oscuro sin valores crudos.
+ */
+
+.item {
+  position: relative;
+  isolation: isolate;
+}
+
+.item::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 0.25rem;
+  border-start-start-radius: inherit;
+  border-end-start-radius: inherit;
+  background-image: linear-gradient(
+    to bottom,
+    rgb(var(--acento-prioridad) / 1),
+    rgb(var(--acento-prioridad) / 0.25)
+  );
+  opacity: 0.85;
+  transform: scaleY(0.35);
+  transform-origin: center;
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.item:hover::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item::before {
+    transition: none;
+    transform: none;
+  }
+
+  .item:hover::before {
+    transform: none;
+  }
+}
+
+.p1 {
+  --acento-prioridad: var(--peligro);
+}
+
+.p2 {
+  --acento-prioridad: var(--atencion);
+}
+
+.p3 {
+  --acento-prioridad: var(--informacion);
+}
+
+.p4 {
+  --acento-prioridad: var(--primario);
+}
+
+.p5 {
+  --acento-prioridad: var(--exito);
+}

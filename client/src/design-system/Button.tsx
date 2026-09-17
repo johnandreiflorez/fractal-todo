@@ -1,3 +1,4 @@
+import { Loader2 } from 'lucide-react';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { cx } from './cx.js';
 
@@ -8,6 +9,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variante?: VarianteBoton;
   tamano?: TamanoBoton;
   icono?: ReactNode;
+  cargando?: boolean;
 }
 
 const VARIANTES: Record<VarianteBoton, string> = {
@@ -29,14 +31,18 @@ export function Button({
   variante = 'primario',
   tamano = 'md',
   icono,
+  cargando = false,
   className,
   children,
   type = 'button',
+  disabled,
   ...props
 }: Props) {
   return (
     <button
       type={type}
+      disabled={disabled || cargando}
+      aria-busy={cargando || undefined}
       className={cx(
         'inline-flex cursor-pointer select-none items-center justify-center font-medium transition-all',
         'hover:brightness-105 active:scale-[0.98]',
@@ -48,7 +54,11 @@ export function Button({
       )}
       {...props}
     >
-      {icono}
+      {cargando ? (
+        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+      ) : (
+        icono
+      )}
       {children}
     </button>
   );

@@ -47,6 +47,7 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
       <Button
         tamano="sm"
         disabled={ocupado}
+        cargando={actualizarEnLote.isPending && actualizarEnLote.variables?.cambios.completada === true}
         onClick={() =>
           void ejecutar(() =>
             actualizarEnLote.mutateAsync({ ids, cambios: { completada: true } }),
@@ -60,6 +61,7 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
         tamano="sm"
         variante="secundario"
         disabled={ocupado}
+        cargando={actualizarEnLote.isPending && actualizarEnLote.variables?.cambios.completada === false}
         onClick={() =>
           void ejecutar(() =>
             actualizarEnLote.mutateAsync({ ids, cambios: { completada: false } }),
@@ -124,6 +126,7 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
         tamano="sm"
         variante="peligro"
         disabled={ocupado}
+        cargando={eliminarEnLote.isPending}
         onClick={() => {
           if (window.confirm(t('tarea.eliminarConfirmLote', { count: ids.length }))) {
             void ejecutar(() => eliminarEnLote.mutateAsync(ids));

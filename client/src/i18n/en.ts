@@ -10,6 +10,7 @@ export const en: Traducciones = {
     cargandoSesion: 'Loading session…',
     reintentar: 'Retry',
     volverAIntentar: 'Try again',
+    actualizando: 'Updating…',
     algoSaliomal: 'Something went wrong',
   },
   paginas: {
@@ -31,13 +32,14 @@ export const en: Traducciones = {
     categorias: 'Categories',
     nuevaCategoria: 'New category',
     eliminarCategoriaAria: 'Delete category {{nombre}}',
-    eliminarCategoriaTitulo: 'Delete category',
+    editarCategoriaAria: 'Edit category {{nombre}}',
     sinCategorias: 'No categories yet.',
   },
   categoria: {
     nombre: 'Category name',
     color: 'Color',
     guardar: 'Save',
+    actualizar: 'Update',
     cancelar: 'Cancel',
   },
   tarea: {

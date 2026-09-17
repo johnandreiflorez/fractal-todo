@@ -159,6 +159,7 @@ export function FormularioTarea({ abierto, tarea, onCerrar }: Props) {
         <div className="flex justify-end gap-2">
           <Button
             variante="secundario"
+            disabled={isSubmitting}
             onClick={() => {
               reset();
               onCerrar();
@@ -166,12 +167,8 @@ export function FormularioTarea({ abierto, tarea, onCerrar }: Props) {
           >
             {t('tarea.cancelar')}
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting
-              ? t('tarea.guardando')
-              : tarea
-                ? t('tarea.guardarCambios')
-                : t('tarea.crear')}
+          <Button type="submit" cargando={isSubmitting}>
+            {tarea ? t('tarea.guardarCambios') : t('tarea.crear')}
           </Button>
         </div>
       </form>

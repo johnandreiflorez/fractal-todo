@@ -8,6 +8,7 @@ export const es = {
     cargandoSesion: 'Cargando sesión…',
     reintentar: 'Reintentar',
     volverAIntentar: 'Volver a intentar',
+    actualizando: 'Actualizando…',
     algoSaliomal: 'Algo salió mal',
   },
   paginas: {
@@ -29,13 +30,14 @@ export const es = {
     categorias: 'Categorías',
     nuevaCategoria: 'Nueva categoría',
     eliminarCategoriaAria: 'Eliminar categoría {{nombre}}',
-    eliminarCategoriaTitulo: 'Eliminar categoría',
+    editarCategoriaAria: 'Editar categoría {{nombre}}',
     sinCategorias: 'Sin categorías todavía.',
   },
   categoria: {
     nombre: 'Nombre de la categoría',
     color: 'Color',
     guardar: 'Guardar',
+    actualizar: 'Actualizar',
     cancelar: 'Cancelar',
   },
   tarea: {

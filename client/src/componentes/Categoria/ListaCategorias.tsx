@@ -1,14 +1,21 @@
 import { useTranslation } from 'react-i18next';
-import { X } from 'lucide-react';
+import { Pencil, X } from 'lucide-react';
 import { BotonIcono } from '../../design-system/index.js';
 import type { Categoria } from '../../tipos/index.js';
 
 interface Props {
   categorias: Categoria[];
+  eliminandoId?: number | null;
   onEliminar: (id: number) => void;
+  onEditar: (categoria: Categoria) => void;
 }
 
-export function ListaCategorias({ categorias, onEliminar }: Props) {
+export function ListaCategorias({
+  categorias,
+  eliminandoId = null,
+  onEliminar,
+  onEditar,
+}: Props) {
   const { t } = useTranslation();
 
   if (categorias.length === 0) {
@@ -30,7 +37,17 @@ export function ListaCategorias({ categorias, onEliminar }: Props) {
           </span>
           <BotonIcono
             variante="fantasma"
-            etiqueta={t('lateral.eliminarCategoriaTitulo')}
+            etiqueta={t('lateral.editarCategoriaAria', { nombre: categoria.nombre })}
+            disabled={eliminandoId === categoria.id}
+            onClick={() => onEditar(categoria)}
+            className="h-7 w-7"
+          >
+            <Pencil className="h-4 w-4" aria-hidden="true" />
+          </BotonIcono>
+          <BotonIcono
+            variante="fantasma"
+            etiqueta={t('lateral.eliminarCategoriaAria', { nombre: categoria.nombre })}
+            cargando={eliminandoId === categoria.id}
             onClick={() => onEliminar(categoria.id)}
             className="h-7 w-7"
           >

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus } from 'lucide-react';
+import { Loader2, Plus } from 'lucide-react';
 import { mensajeDeError } from '../../api/cliente.js';
 import { Button, EstadoVacio, IndicadorCarga, MensajeError } from '../../design-system/index.js';
 import { useTareas } from '../../hooks/useTareas.js';
@@ -18,10 +18,13 @@ export function ListaTareas() {
   const {
     data: tareas,
     isPending,
+    isFetching,
     isError,
     error,
     refetch,
   } = useTareas(aFiltrosTareas(filtros));
+
+  const refrescando = isFetching && !isPending;
 
   const [seleccion, setSeleccion] = useState<ReadonlySet<number>>(new Set());
   const [creando, setCreando] = useState(false);
@@ -47,9 +50,20 @@ export function ListaTareas() {
   return (
     <section className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-display text-2xl font-bold text-texto">
-          {t('tarea.misTareas')}
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="font-display text-2xl font-bold text-texto">
+            {t('tarea.misTareas')}
+          </h1>
+          {refrescando && (
+            <span
+              role="status"
+              className="inline-flex items-center gap-1.5 text-sm text-texto-atenuado"
+            >
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              {t('comunes.actualizando')}
+            </span>
+          )}
+        </div>
         <Button
           variante="primario"
           icono={<Plus className="h-4 w-4" aria-hidden="true" />}

@@ -2,10 +2,19 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CheckCircle2, Circle, Pencil, Trash2 } from 'lucide-react';
 import { mensajeDeError } from '../../api/cliente.js';
-import { Badge, BotonIcono, Button } from '../../design-system/index.js';
+import { Badge, BotonIcono, Button, cx } from '../../design-system/index.js';
 import { useCompletarTarea, useEliminarTarea } from '../../hooks/useTareas.js';
 import { COLORES_PRIORIDAD, formatearFecha } from '../../utils/helpers.js';
-import type { Tarea } from '../../tipos/index.js';
+import type { Prioridad, Tarea } from '../../tipos/index.js';
+import estilos from './ItemTarea.module.css';
+
+const ACENTO_POR_PRIORIDAD: Record<Prioridad, string> = {
+  1: estilos.p1,
+  2: estilos.p2,
+  3: estilos.p3,
+  4: estilos.p4,
+  5: estilos.p5,
+};
 
 interface Props {
   tarea: Tarea;
@@ -53,11 +62,13 @@ export function ItemTarea({ tarea, seleccionada, onCambiarSeleccion, onEditar }:
 
   return (
     <li
-      className={
+      className={cx(
+        estilos.item,
+        ACENTO_POR_PRIORIDAD[tarea.prioridad],
         tarea.completada
           ? 'flex flex-col gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja opacity-60 transition-all duration-200 sm:flex-row sm:items-start'
-          : 'flex animate-rise-in flex-col gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja transition-all duration-200 hover:-translate-y-0.5 hover:border-primario/40 hover:shadow-media sm:flex-row sm:items-start'
-      }
+          : 'flex animate-rise-in flex-col gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja transition-all duration-200 hover:-translate-y-0.5 hover:border-primario/40 hover:shadow-media sm:flex-row sm:items-start',
+      )}
     >
       <div className="flex items-center gap-3">
         <input
@@ -70,6 +81,7 @@ export function ItemTarea({ tarea, seleccionada, onCambiarSeleccion, onEditar }:
         <div className="flex items-center gap-1.5">
           <BotonIcono
             etiqueta={tarea.completada ? t('tarea.marcarPendiente') : t('tarea.marcarCompletada')}
+            cargando={completar.isPending}
             onClick={() => void manejarCompletar()}
           >
             {tarea.completada ? (
@@ -141,6 +153,7 @@ export function ItemTarea({ tarea, seleccionada, onCambiarSeleccion, onEditar }:
           tamano="sm"
           variante="peligro"
           icono={<Trash2 className="h-4 w-4" aria-hidden="true" />}
+          cargando={eliminar.isPending}
           onClick={() => void manejarEliminar()}
         >
           {t('tarea.eliminar')}
