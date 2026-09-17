@@ -7,6 +7,7 @@ import '@fontsource-variable/manrope';
 import App from './App';
 import { ErrorBoundary } from './componentes/Comunes/ErrorBoundary';
 import { ProveedorAuth } from './contexto/ContextoAuth';
+import { ProveedorTiempoReal } from './contexto/ContextoTiempoReal';
 import './index.css';
 import './i18n/index.js';
 
@@ -29,7 +30,9 @@ createRoot(raiz).render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <ProveedorAuth>
-            <App />
+            <ProveedorTiempoReal>
+              <App />
+            </ProveedorTiempoReal>
           </ProveedorAuth>
         </BrowserRouter>
       </QueryClientProvider>

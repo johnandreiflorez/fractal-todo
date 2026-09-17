@@ -1,11 +1,12 @@
-import { app } from './app.js';
 import { env } from './config/env.js';
 import { pool } from './config/db.js';
+import { crearServidorHttp } from './servidor.js';
 
 async function iniciar(): Promise<void> {
   try {
     await pool.query('SELECT 1');
-    app.listen(env.PORT, () => {
+    const servidor = crearServidorHttp();
+    servidor.listen(env.PORT, () => {
       console.log(`API escuchando en http://localhost:${env.PORT}`);
     });
   } catch (error) {

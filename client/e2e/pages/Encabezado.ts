@@ -35,6 +35,12 @@ export class Encabezado extends Pagina {
     return this.banner().getByRole('button', { name: this.t('encabezado.salir') });
   }
 
+  estadoTiempoReal(
+    estado: 'conectado' | 'conectando' | 'desconectado',
+  ): Locator {
+    return this.banner().getByTitle(this.t(`tiempoReal.${estado}`));
+  }
+
   async cerrarSesion(): Promise<void> {
     await this.botonSalir().click();
   }

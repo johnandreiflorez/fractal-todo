@@ -111,6 +111,12 @@ export const es = {
     4: 'Normal',
     5: 'Baja',
   },
+  tiempoReal: {
+    etiquetaAria: 'Estado de las actualizaciones en tiempo real',
+    conectado: 'En vivo',
+    conectando: 'Conectando…',
+    desconectado: 'Sin conexión',
+  },
   auth: {
     email: 'Email',
     password: 'Contraseña',

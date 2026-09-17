@@ -1,13 +1,13 @@
 # Lista de Tareas — Reto Técnico Full-Stack
 
-Aplicación web completa de lista de tareas: **React + TypeScript**, **Node.js + Express + TypeScript** y **PostgreSQL**. Incluye JWT, filtrado y búsqueda, categorías, etiquetas, tema claro/oscuro y operaciones en lote.
+Aplicación web completa de lista de tareas: **React + TypeScript**, **Node.js + Express + TypeScript** y **PostgreSQL**. Incluye JWT, filtrado y búsqueda, categorías, etiquetas, tema claro/oscuro, operaciones en lote y **actualizaciones en tiempo real por WebSocket**.
 
 ## Stack
 
 | Capa | Tecnología |
 | --- | --- |
 | Frontend | React 19, Vite 8, TypeScript, Tailwind CSS 4, **Julia DS** (sistema de diseño propio con design tokens), Lucide, TanStack Query 5, React Router 7, React Hook Form + Zod, **i18next + react-i18next** |
-| Backend | Node.js, Express 5, TypeScript, Zod 4, `pg`, JWT (`jsonwebtoken`), `bcryptjs` |
+| Backend | Node.js, Express 5, TypeScript, Zod 4, `pg`, JWT (`jsonwebtoken`), `bcryptjs`, `ws` (WebSocket) |
 | Base de datos | PostgreSQL 16 (Docker Compose) |
 
 ## Estructura
@@ -25,7 +25,7 @@ Aplicación web completa de lista de tareas: **React + TypeScript**, **Node.js +
 │       └── utils/         # authStorage, helpers (filtros)
 ├── server/                # API Express
 │   ├── sql/               # schema.sql, seed.sql, consultas_negocio.sql
-│   └── src/               # rutas, controladores, servicios, repositorios, middlewares
+│   └── src/               # rutas, controladores, servicios, repositorios, middlewares, ws
 ├── docs/
 │   ├── architecture_rules.md
 │   └── api.md             # Documentación de la API
@@ -84,6 +84,14 @@ Crea una base `todo_list` y aplica los scripts con `psql` (la conexión se confi
 | `carlos@demo.com` | `password123` |
 | `lucia@demo.com` | `password123` |
 
+## Actualizaciones en tiempo real (WebSocket)
+
+- El backend expone un canal WebSocket en `GET /ws?token=<JWT>`. Las conexiones sin token válido se cierran con el código `4001`.
+- Cada cambio en tareas, categorías o etiquetas emite un mensaje `{ tipo: "cambio", recursos: [...] }` **solo a las conexiones del mismo usuario**, de modo que varias pestañas o dispositivos se mantienen sincronizados.
+- El cliente (`client/src/contexto/ContextoTiempoReal.tsx`) abre la conexión tras iniciar sesión, reconecta con retroceso exponencial (1 s → 15 s) e invalida las consultas de TanStack Query correspondientes; el estado se muestra como insignia en el encabezado.
+- Incluye latido (ping/pong) en el servidor para descartar conexiones muertas y limpieza de listeners/temporizadores en el cliente (`useEffect` con función de limpieza).
+- En desarrollo el proxy de Vite reenvía `/ws` al backend (`server.proxy['/ws'].ws`).
+
 ## Internacionalización (i18n)
 
 - Todas las cadenas visibles de la interfaz pasan por el hook `useTranslation()` de `react-i18next` (regla del repositorio: sin texto hardcodeado en la UI).
@@ -108,10 +116,10 @@ Cubre la API con pruebas reales contra PostgreSQL (migración de esquema + ejecu
 | Comando (server) | Descripción |
 | --- | --- |
 | `npm run test:db:setup` | Recrea la base `todo_list_test` con el esquema vigente |
-| `npm test` | Migra la base y ejecuta las 55 pruebas de integración |
+| `npm test` | Migra la base y ejecuta las 58 pruebas de integración |
 | `npm run typecheck` | Verificación de tipos (`tsc --noEmit`) |
 
-Suites en `server/tests/`: `auth.test.ts`, `tareas.test.ts`, `filtros.test.ts` y `categorias-etiquetas.test.ts`. Los datos se generan con `emailUnico()` para que cada ejecución quede aislada.
+Suites en `server/tests/`: `auth.test.ts`, `tareas.test.ts`, `filtros.test.ts`, `categorias-etiquetas.test.ts` y `tiempo-real.test.ts`. Los datos se generan con `emailUnico()` para que cada ejecución quede aislada.
 
 ### Frontend — E2E (Playwright + Screenplay)
 
@@ -120,9 +128,9 @@ Validan el flujo completo navegador → Vite → API → PostgreSQL sobre la bas
 | Comando (client) | Descripción |
 | --- | --- |
 | `npm run e2e:install` | Instala el navegador Chromium de Playwright |
-| `npm run e2e` | Levanta API (`:4100`) y app (`:5175`) automáticamente y ejecuta los 17 escenarios |
+| `npm run e2e` | Levanta API (`:4100`) y app (`:5175`) automáticamente y ejecuta los 18 escenarios |
 
-La capa E2E sigue el patrón **Screenplay** (`client/e2e/`): actores con habilidades, tareas y preguntas de dominio, y page objects que solo usan claves i18n reales (`src/i18n/es.ts`/`en.ts`). Los escenarios cubren autenticación, gestión de tareas (crear/editar/completar/eliminar, filtros, búsqueda, orden y operaciones en lote), categorías y preferencias de idioma y tema.
+La capa E2E sigue el patrón **Screenplay** (`client/e2e/`): actores con habilidades, tareas y preguntas de dominio, y page objects que solo usan claves i18n reales (`src/i18n/es.ts`/`en.ts`). Los escenarios cubren autenticación, gestión de tareas (crear/editar/completar/eliminar, filtros, búsqueda, orden y operaciones en lote), categorías, preferencias de idioma y tema, y la sincronización en vivo entre dos pestañas del mismo usuario.
 
 ## Scripts útiles
 
@@ -134,7 +142,7 @@ La capa E2E sigue el patrón **Screenplay** (`client/e2e/`): actores con habilid
 | `npm run build` (client) | `tsc -b` + build de producción |
 | `npm run lint` (client) | Linter (`oxlint`) |
 | `npm test` (server) | Suite de integración completa (recrea `todo_list_test`) |
-| `npm run e2e` (client) | Suite E2E de Playwright (17 escenarios; arranca API y app) |
+| `npm run e2e` (client) | Suite E2E de Playwright (18 escenarios; arranca API y app) |
 | `npm run preview` (client) | Sirve el build de producción |
 
 ## Endpoints (resumen)

@@ -4,6 +4,7 @@ import type { FiltrosQueryTareas } from '../services/tareas.service.js';
 import { esquemaQueryTareas } from '../validation/schemas.js';
 import { idUsuarioLogueado } from '../utils/requestUser.js';
 import { badRequest } from '../utils/httpError.js';
+import { emitirCambio } from '../ws/tiempoReal.js';
 import type { ActualizarTarea, CambiosLote, NuevaTarea } from '../models/tarea.js';
 
 export type QueryListarTareas = FiltrosQueryTareas;
@@ -25,7 +26,9 @@ export async function crear(
   req: Request<Record<string, never>, unknown, NuevaTarea>,
   res: Response,
 ): Promise<void> {
-  const tarea = await tareasService.crearTarea(idUsuarioLogueado(req), req.body);
+  const usuarioId = idUsuarioLogueado(req);
+  const tarea = await tareasService.crearTarea(usuarioId, req.body);
+  emitirCambio(usuarioId, ['tareas', 'etiquetas']);
   res.status(201).json(tarea);
 }
 
@@ -33,11 +36,13 @@ export async function actualizar(
   req: Request<{ id: string }, unknown, ActualizarTarea>,
   res: Response,
 ): Promise<void> {
+  const usuarioId = idUsuarioLogueado(req);
   const tarea = await tareasService.actualizarTarea(
-    idUsuarioLogueado(req),
+    usuarioId,
     Number(req.params.id),
     req.body,
   );
+  emitirCambio(usuarioId, ['tareas', 'etiquetas']);
   res.json(tarea);
 }
 
@@ -45,11 +50,13 @@ export async function completar(
   req: Request<{ id: string }, unknown, { completada: boolean }>,
   res: Response,
 ): Promise<void> {
+  const usuarioId = idUsuarioLogueado(req);
   const tarea = await tareasService.completarTarea(
-    idUsuarioLogueado(req),
+    usuarioId,
     Number(req.params.id),
     req.body.completada,
   );
+  emitirCambio(usuarioId, ['tareas']);
   res.json(tarea);
 }
 
@@ -57,7 +64,9 @@ export async function eliminar(
   req: Request<{ id: string }>,
   res: Response,
 ): Promise<void> {
-  await tareasService.eliminarTarea(idUsuarioLogueado(req), Number(req.params.id));
+  const usuarioId = idUsuarioLogueado(req);
+  await tareasService.eliminarTarea(usuarioId, Number(req.params.id));
+  emitirCambio(usuarioId, ['tareas']);
   res.status(204).send();
 }
 
@@ -70,11 +79,13 @@ export async function actualizarEnLote(
   req: Request<Record<string, never>, unknown, CuerpoBatchActualizar>,
   res: Response,
 ): Promise<void> {
+  const usuarioId = idUsuarioLogueado(req);
   const resultado = await tareasService.actualizarTareasEnLote(
-    idUsuarioLogueado(req),
+    usuarioId,
     req.body.ids,
     req.body.cambios,
   );
+  emitirCambio(usuarioId, ['tareas', 'etiquetas']);
   res.json(resultado);
 }
 
@@ -86,9 +97,8 @@ export async function eliminarEnLote(
   req: Request<Record<string, never>, unknown, CuerpoBatchEliminar>,
   res: Response,
 ): Promise<void> {
-  const resultado = await tareasService.eliminarTareasEnLote(
-    idUsuarioLogueado(req),
-    req.body.ids,
-  );
+  const usuarioId = idUsuarioLogueado(req);
+  const resultado = await tareasService.eliminarTareasEnLote(usuarioId, req.body.ids);
+  emitirCambio(usuarioId, ['tareas']);
   res.json(resultado);
 }

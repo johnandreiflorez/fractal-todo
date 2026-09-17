@@ -113,6 +113,12 @@ export const en: Traducciones = {
     4: 'Normal',
     5: 'Low',
   },
+  tiempoReal: {
+    etiquetaAria: 'Real-time updates status',
+    conectado: 'Live',
+    conectando: 'Connecting…',
+    desconectado: 'Offline',
+  },
   auth: {
     email: 'Email',
     password: 'Password',

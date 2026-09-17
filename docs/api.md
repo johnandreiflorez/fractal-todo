@@ -250,6 +250,24 @@ Lista las etiquetas del usuario (mayúsculas y minúsculas diferenciadas). → `
 ```
 - `nombre`: obligatorio, 1–50. `409` si ya existe.
 
+## Actualizaciones en tiempo real (WebSocket)
+
+Además de la API REST, el servidor expone un canal WebSocket para sincronizar varias pestañas o dispositivos del mismo usuario.
+
+```
+ws://localhost:4000/ws?token=<JWT>
+```
+
+- La autenticación se hace con el JWT en el parámetro `token`. Si falta o es inválido, el servidor cierra la conexión con el código `4001`.
+- En desarrollo el proxy de Vite reenvía `/ws` al backend, por lo que el cliente usa `ws://localhost:5173/ws?token=...`.
+- El servidor envía un mensaje de cambio únicamente a las conexiones del usuario que originó la mutación:
+
+```json
+{ "tipo": "cambio", "recursos": ["tareas", "etiquetas"], "emitido_en": "2026-09-15T12:00:00.000Z" }
+```
+
+`recursos` indica las colecciones afectadas (`tareas`, `categorias`, `etiquetas`); el cliente invalida esas consultas y vuelve a pedirlas por REST. Se emite latido (ping) cada 30 s para descartar conexiones inactivas.
+
 ## Notas de seguridad
 
 - Consultas a PostgreSQL 100 % parametrizadas (sin interpolación de SQL).

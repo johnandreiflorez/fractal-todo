@@ -71,6 +71,30 @@ export interface CambiosLote {
   etiquetas?: string[];
 }
 
+export type RecursoTiempoReal = 'tareas' | 'categorias' | 'etiquetas';
+
+export interface MensajeCambioTiempoReal {
+  tipo: 'cambio';
+  recursos: RecursoTiempoReal[];
+  emitido_en: string;
+}
+
+function esRecursoTiempoReal(valor: unknown): valor is RecursoTiempoReal {
+  return valor === 'tareas' || valor === 'categorias' || valor === 'etiquetas';
+}
+
+export function esMensajeCambio(valor: unknown): valor is MensajeCambioTiempoReal {
+  return (
+    typeof valor === 'object' &&
+    valor !== null &&
+    'tipo' in valor &&
+    valor.tipo === 'cambio' &&
+    'recursos' in valor &&
+    Array.isArray(valor.recursos) &&
+    valor.recursos.every(esRecursoTiempoReal)
+  );
+}
+
 export function esUsuarioLogueado(valor: unknown): valor is UsuarioLogueado {
   return (
     typeof valor === 'object' &&

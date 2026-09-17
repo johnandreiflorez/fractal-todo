@@ -1,13 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LogOut, Moon, Sun } from 'lucide-react';
-import { BotonIcono } from '../../design-system/index.js';
+import { Badge, BotonIcono } from '../../design-system/index.js';
+import type { VarianteInsignia } from '../../design-system/index.js';
 import { useAuth } from '../../hooks/useAuth.js';
+import { useTiempoReal } from '../../contexto/ContextoTiempoReal.js';
+import type { EstadoTiempoReal } from '../../contexto/ContextoTiempoReal.js';
 import { cambiarIdioma } from '../../i18n/index.js';
+
+const VARIANTE_ESTADO: Record<EstadoTiempoReal, VarianteInsignia> = {
+  conectado: 'exito',
+  conectando: 'atencion',
+  desconectado: 'neutro',
+};
 
 export function Header() {
   const { t } = useTranslation();
   const { usuario, cerrarSesion } = useAuth();
+  const { estado } = useTiempoReal();
   const [oscuro, setOscuro] = useState(
     () => document.documentElement.dataset.tema === 'oscuro',
   );
@@ -23,6 +33,17 @@ export function Header() {
       </h1>
 
       <div className="flex items-center gap-2">
+        <span
+          aria-label={t('tiempoReal.etiquetaAria')}
+          title={t(`tiempoReal.${estado}`)}
+          className="inline-flex"
+        >
+          <Badge variante={VARIANTE_ESTADO[estado]}>
+            <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+            <span className="hidden sm:inline">{t(`tiempoReal.${estado}`)}</span>
+          </Badge>
+        </span>
+
         <BotonIcono
           etiqueta={
             oscuro
