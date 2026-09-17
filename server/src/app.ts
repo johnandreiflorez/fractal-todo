@@ -9,6 +9,8 @@ import { categoriasRouter } from './routes/categorias.routes.js';
 import { etiquetasRouter } from './routes/etiquetas.routes.js';
 import { apiLimiter } from './middlewares/rateLimit.js';
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
+import swaggerUi from 'swagger-ui-express';
+import { openapiDocument } from './docs/openapi.js';
 
 export const app = express();
 
@@ -28,6 +30,10 @@ app.use(
 );
 
 app.use('/api', apiLimiter);
+app.get('/api/openapi.json', (_req, res) => {
+  res.json(openapiDocument);
+});
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openapiDocument));
 app.use('/api/auth', authRouter);
 app.use('/api/tareas', tareasRouter);
 app.use('/api/categorias', categoriasRouter);

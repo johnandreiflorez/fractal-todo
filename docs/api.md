@@ -4,6 +4,9 @@ Documentación de la API REST del reto full-stack. Servidor Express 5 + TypeScri
 
 **Base URL (desarrollo):** `http://localhost:4000/api`
 
+**Swagger UI:** `http://localhost:4000/api/docs`  
+**Especificación OpenAPI:** `http://localhost:4000/api/openapi.json`
+
 Durante el desarrollo del frontend también está disponible vía el proxy de Vite en `http://localhost:5173/api`.
 
 ## Convenciones generales
