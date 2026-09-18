@@ -7,6 +7,7 @@ import { authRouter } from './routes/auth.routes.js';
 import { tareasRouter } from './routes/tareas.routes.js';
 import { categoriasRouter } from './routes/categorias.routes.js';
 import { etiquetasRouter } from './routes/etiquetas.routes.js';
+import { estadisticasRouter } from './routes/estadisticas.routes.js';
 import { apiLimiter } from './middlewares/rateLimit.js';
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
 import swaggerUi from 'swagger-ui-express';
@@ -38,6 +39,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/tareas', tareasRouter);
 app.use('/api/categorias', categoriasRouter);
 app.use('/api/etiquetas', etiquetasRouter);
+app.use('/api/estadisticas', estadisticasRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ estado: 'ok', timestamp: new Date().toISOString() });

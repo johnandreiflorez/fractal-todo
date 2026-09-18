@@ -202,6 +202,56 @@ export const openapiDocument = {
         },
         required: ['nombre'],
       },
+      ResumenEstadisticas: {
+        type: 'object',
+        properties: {
+          total: { type: 'integer', example: 12 },
+          completadas: { type: 'integer', example: 7 },
+          pendientes: { type: 'integer', example: 5 },
+          vencidas: { type: 'integer', example: 2 },
+          tasa_completado: {
+            type: 'number',
+            description: 'Porcentaje de tareas completadas (0 a 100, un decimal).',
+            example: 58.3,
+          },
+        },
+        required: ['total', 'completadas', 'pendientes', 'vencidas', 'tasa_completado'],
+      },
+      EstadisticaPrioridad: {
+        type: 'object',
+        properties: {
+          prioridad: { type: 'integer', minimum: 1, maximum: 5, example: 1 },
+          total: { type: 'integer', example: 4 },
+          completadas: { type: 'integer', example: 1 },
+        },
+        required: ['prioridad', 'total', 'completadas'],
+      },
+      EstadisticaCategoria: {
+        type: 'object',
+        properties: {
+          categoria_id: { type: 'integer', nullable: true, example: 2 },
+          categoria_nombre: { type: 'string', nullable: true, example: 'Trabajo' },
+          categoria_color: { type: 'string', nullable: true, example: '#60a5fa' },
+          total: { type: 'integer', example: 6 },
+          completadas: { type: 'integer', example: 4 },
+        },
+        required: ['categoria_id', 'categoria_nombre', 'categoria_color', 'total', 'completadas'],
+      },
+      Estadisticas: {
+        type: 'object',
+        properties: {
+          resumen: { $ref: '#/components/schemas/ResumenEstadisticas' },
+          por_prioridad: {
+            type: 'array',
+            items: { $ref: '#/components/schemas/EstadisticaPrioridad' },
+          },
+          por_categoria: {
+            type: 'array',
+            items: { $ref: '#/components/schemas/EstadisticaCategoria' },
+          },
+        },
+        required: ['resumen', 'por_prioridad', 'por_categoria'],
+      },
     },
     responses: {
       BadRequest: error400,
@@ -881,6 +931,58 @@ export const openapiDocument = {
             },
           },
           400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+        },
+      },
+    },
+    '/api/estadisticas': {
+      get: {
+        summary: 'Obtener estadísticas de tareas',
+        description:
+          'Agrega las tareas del usuario: resumen general, desglose por prioridad (siempre las 5) y por categoría (incluye las tareas sin categoría).',
+        tags: ['Estadísticas'],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: {
+            description: 'Estadísticas del usuario',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/Estadisticas' },
+                example: {
+                  resumen: {
+                    total: 12,
+                    completadas: 7,
+                    pendientes: 5,
+                    vencidas: 2,
+                    tasa_completado: 58.3,
+                  },
+                  por_prioridad: [
+                    { prioridad: 1, total: 4, completadas: 1 },
+                    { prioridad: 2, total: 3, completadas: 2 },
+                    { prioridad: 3, total: 2, completadas: 1 },
+                    { prioridad: 4, total: 2, completadas: 2 },
+                    { prioridad: 5, total: 1, completadas: 1 },
+                  ],
+                  por_categoria: [
+                    {
+                      categoria_id: 2,
+                      categoria_nombre: 'Trabajo',
+                      categoria_color: '#60a5fa',
+                      total: 6,
+                      completadas: 4,
+                    },
+                    {
+                      categoria_id: null,
+                      categoria_nombre: null,
+                      categoria_color: null,
+                      total: 3,
+                      completadas: 1,
+                    },
+                  ],
+                },
+              },
+            },
+          },
           401: { $ref: '#/components/responses/Unauthorized' },
         },
       },

@@ -14,7 +14,7 @@ export async function crear(
 ): Promise<void> {
   const usuarioId = idUsuarioLogueado(req);
   const categoria = await categoriasService.crearCategoria(usuarioId, req.body);
-  emitirCambio(usuarioId, ['categorias']);
+  emitirCambio(usuarioId, ['categorias', 'estadisticas']);
   res.status(201).json(categoria);
 }
 
@@ -28,13 +28,13 @@ export async function actualizar(
     Number(req.params.id),
     req.body,
   );
-  emitirCambio(usuarioId, ['categorias', 'tareas']);
+  emitirCambio(usuarioId, ['categorias', 'tareas', 'estadisticas']);
   res.json(categoria);
 }
 
 export async function eliminar(req: Request<{ id: string }>, res: Response): Promise<void> {
   const usuarioId = idUsuarioLogueado(req);
   await categoriasService.eliminarCategoria(usuarioId, Number(req.params.id));
-  emitirCambio(usuarioId, ['categorias', 'tareas']);
+  emitirCambio(usuarioId, ['categorias', 'tareas', 'estadisticas']);
   res.status(204).send();
 }

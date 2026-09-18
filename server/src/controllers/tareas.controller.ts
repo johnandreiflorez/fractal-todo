@@ -28,7 +28,7 @@ export async function crear(
 ): Promise<void> {
   const usuarioId = idUsuarioLogueado(req);
   const tarea = await tareasService.crearTarea(usuarioId, req.body);
-  emitirCambio(usuarioId, ['tareas', 'etiquetas']);
+  emitirCambio(usuarioId, ['tareas', 'etiquetas', 'estadisticas']);
   res.status(201).json(tarea);
 }
 
@@ -42,7 +42,7 @@ export async function actualizar(
     Number(req.params.id),
     req.body,
   );
-  emitirCambio(usuarioId, ['tareas', 'etiquetas']);
+  emitirCambio(usuarioId, ['tareas', 'etiquetas', 'estadisticas']);
   res.json(tarea);
 }
 
@@ -56,7 +56,7 @@ export async function completar(
     Number(req.params.id),
     req.body.completada,
   );
-  emitirCambio(usuarioId, ['tareas']);
+  emitirCambio(usuarioId, ['tareas', 'estadisticas']);
   res.json(tarea);
 }
 
@@ -66,7 +66,7 @@ export async function eliminar(
 ): Promise<void> {
   const usuarioId = idUsuarioLogueado(req);
   await tareasService.eliminarTarea(usuarioId, Number(req.params.id));
-  emitirCambio(usuarioId, ['tareas']);
+  emitirCambio(usuarioId, ['tareas', 'estadisticas']);
   res.status(204).send();
 }
 
@@ -85,7 +85,7 @@ export async function actualizarEnLote(
     req.body.ids,
     req.body.cambios,
   );
-  emitirCambio(usuarioId, ['tareas', 'etiquetas']);
+  emitirCambio(usuarioId, ['tareas', 'etiquetas', 'estadisticas']);
   res.json(resultado);
 }
 
@@ -99,6 +99,6 @@ export async function eliminarEnLote(
 ): Promise<void> {
   const usuarioId = idUsuarioLogueado(req);
   const resultado = await tareasService.eliminarTareasEnLote(usuarioId, req.body.ids);
-  emitirCambio(usuarioId, ['tareas']);
+  emitirCambio(usuarioId, ['tareas', 'estadisticas']);
   res.json(resultado);
 }

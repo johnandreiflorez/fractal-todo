@@ -250,6 +250,32 @@ Lista las etiquetas del usuario (mayúsculas y minúsculas diferenciadas). → `
 ```
 - `nombre`: obligatorio, 1–50. `409` si ya existe.
 
+## Estadísticas
+
+### `GET /api/estadisticas` *(protegido)*
+Agrega en SQL las tareas del usuario. `por_prioridad` siempre incluye las cinco prioridades (con ceros) y `por_categoria` incluye una fila para las tareas sin categoría (`categoria_id: null`).
+
+```json
+// 200 OK
+{
+  "resumen": { "total": 3, "completadas": 1, "pendientes": 2, "vencidas": 1, "tasa_completado": 33.3 },
+  "por_prioridad": [
+    { "prioridad": 1, "total": 1, "completadas": 0 },
+    { "prioridad": 2, "total": 0, "completadas": 0 },
+    { "prioridad": 3, "total": 2, "completadas": 1 },
+    { "prioridad": 4, "total": 0, "completadas": 0 },
+    { "prioridad": 5, "total": 0, "completadas": 0 }
+  ],
+  "por_categoria": [
+    { "categoria_id": 2, "categoria_nombre": "Trabajo", "categoria_color": "#60a5fa", "total": 2, "completadas": 1 },
+    { "categoria_id": null, "categoria_nombre": null, "categoria_color": null, "total": 1, "completadas": 0 }
+  ]
+}
+```
+
+- `tasa_completado`: porcentaje (0–100) con un decimal.
+- La exportación a CSV/JSON de las tareas se genera en el cliente a partir de `GET /api/tareas` (sin endpoint adicional).
+
 ## Actualizaciones en tiempo real (WebSocket)
 
 Además de la API REST, el servidor expone un canal WebSocket para sincronizar varias pestañas o dispositivos del mismo usuario.
@@ -266,7 +292,7 @@ ws://localhost:4000/ws?token=<JWT>
 { "tipo": "cambio", "recursos": ["tareas", "etiquetas"], "emitido_en": "2026-09-15T12:00:00.000Z" }
 ```
 
-`recursos` indica las colecciones afectadas (`tareas`, `categorias`, `etiquetas`); el cliente invalida esas consultas y vuelve a pedirlas por REST. Se emite latido (ping) cada 30 s para descartar conexiones inactivas.
+`recursos` indica las colecciones afectadas (`tareas`, `categorias`, `etiquetas`, `estadisticas`); el cliente invalida esas consultas y vuelve a pedirlas por REST. Se emite latido (ping) cada 30 s para descartar conexiones inactivas.
 
 ## Notas de seguridad
 
