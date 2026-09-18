@@ -15,11 +15,28 @@ import { openapiDocument } from './docs/openapi.js';
 
 export const app = express();
 
+const ORIGENES_CAPACITOR = [
+  'capacitor://localhost',
+  'http://localhost',
+  'https://localhost',
+];
+const origenesConfigurados = env.CORS_ORIGIN.split(',')
+  .map((origen) => origen.trim())
+  .filter((origen) => origen.length > 0);
+const permitirTodos = origenesConfigurados.includes('*');
+const origenesPermitidos = new Set([...origenesConfigurados, ...ORIGENES_CAPACITOR]);
+
 app.disable('x-powered-by');
 app.use(helmet());
 app.use(
   cors({
-    origin: env.CORS_ORIGIN,
+    origin(origin, callback) {
+      if (permitirTodos || !origin || origenesPermitidos.has(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(null, false);
+    },
     credentials: true,
   }),
 );

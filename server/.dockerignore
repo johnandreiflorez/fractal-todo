@@ -1,0 +1,8 @@
+node_modules
+dist
+tests
+scripts
+*.log
+.env
+dev.err
+dev.log
