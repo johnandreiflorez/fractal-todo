@@ -1,8 +1,9 @@
 import axios, { AxiosError } from 'axios';
+import { urlBaseApi } from '../config/api.js';
 import { limpiarSesion, obtenerToken } from '../utils/authStorage.js';
 
 export const clienteHttp = axios.create({
-  baseURL: '/api',
+  baseURL: urlBaseApi(),
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
