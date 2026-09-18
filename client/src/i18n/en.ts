@@ -45,6 +45,8 @@ export const en: Traducciones = {
   tarea: {
     misTareas: 'My tasks',
     nuevaTarea: 'New task',
+    exportarCsv: 'Download CSV',
+    exportarJson: 'Download JSON',
     tituloNueva: 'New task',
     tituloEditar: 'Edit task',
     titulo: 'Title',
@@ -105,6 +107,9 @@ export const en: Traducciones = {
     moverCategoria: 'Category…',
     categoriaLoteAria: 'Move to category',
     vacio: 'No matching tasks. Create a new one!',
+    soltarEliminar: 'Drop here to delete',
+    soltarCompletar: 'Drop here to complete',
+    soltarReabrir: 'Drop here to reopen',
   },
   prioridades: {
     1: 'Urgent',

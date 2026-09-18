@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { memo, useRef, useState } from 'react';
+import type { PointerEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CheckCircle2, Circle, Pencil, Trash2 } from 'lucide-react';
+import { CheckCircle2, Circle, GripVertical, Pencil, Trash2 } from 'lucide-react';
 import { mensajeDeError } from '../../api/cliente.js';
 import { Badge, BotonIcono, Button, cx } from '../../design-system/index.js';
 import { useCompletarTarea, useEliminarTarea } from '../../hooks/useTareas.js';
@@ -21,7 +22,12 @@ interface Props {
   seleccionada: boolean;
   onCambiarSeleccion: (id: number, seleccionada: boolean) => void;
   onEditar: (tarea: Tarea) => void;
+  onArrastrar: (tarea: Tarea, x: number, y: number) => void;
+  onSoltar: (tarea: Tarea, x: number, y: number) => void;
+  onCancelarArrastre: () => void;
 }
+
+const UMBRAL_ARRASTRE_PX = 6;
 
 function hoyISO(): string {
   const hoy = new Date();
@@ -30,11 +36,22 @@ function hoyISO(): string {
   return `${hoy.getFullYear()}-${mes}-${dia}`;
 }
 
-export function ItemTarea({ tarea, seleccionada, onCambiarSeleccion, onEditar }: Props) {
+function ItemTareaBase({
+  tarea,
+  seleccionada,
+  onCambiarSeleccion,
+  onEditar,
+  onArrastrar,
+  onSoltar,
+  onCancelarArrastre,
+}: Props) {
   const { t } = useTranslation();
   const completar = useCompletarTarea();
   const eliminar = useEliminarTarea();
   const [error, setError] = useState<string | null>(null);
+  const [arrastrando, setArrastrando] = useState(false);
+  const inicio = useRef<{ x: number; y: number } | null>(null);
+  const arrastrandoRef = useRef(false);
 
   const vencida =
     !tarea.completada &&
@@ -60,17 +77,78 @@ export function ItemTarea({ tarea, seleccionada, onCambiarSeleccion, onEditar }:
     }
   };
 
+  const esControl = (objetivo: EventTarget | null): boolean =>
+    objetivo instanceof Element &&
+    objetivo.closest('input, button, a, select, textarea, label') !== null;
+
+  const manejarPointerDown = (evento: PointerEvent<HTMLLIElement>) => {
+    if (evento.pointerType === 'mouse' && evento.button !== 0) return;
+    if (esControl(evento.target)) return;
+    inicio.current = { x: evento.clientX, y: evento.clientY };
+    arrastrandoRef.current = false;
+    evento.currentTarget.setPointerCapture(evento.pointerId);
+  };
+
+  const manejarPointerMove = (evento: PointerEvent<HTMLLIElement>) => {
+    const puntoInicial = inicio.current;
+    if (!puntoInicial) return;
+    if (!arrastrandoRef.current) {
+      const distancia = Math.hypot(
+        evento.clientX - puntoInicial.x,
+        evento.clientY - puntoInicial.y,
+      );
+      if (distancia < UMBRAL_ARRASTRE_PX) return;
+      arrastrandoRef.current = true;
+      setArrastrando(true);
+    }
+    onArrastrar(tarea, evento.clientX, evento.clientY);
+  };
+
+  const manejarPointerUp = (evento: PointerEvent<HTMLLIElement>) => {
+    const estabaArrastrando = arrastrandoRef.current;
+    inicio.current = null;
+    arrastrandoRef.current = false;
+    if (evento.currentTarget.hasPointerCapture(evento.pointerId)) {
+      evento.currentTarget.releasePointerCapture(evento.pointerId);
+    }
+    if (!estabaArrastrando) return;
+    setArrastrando(false);
+    onSoltar(tarea, evento.clientX, evento.clientY);
+  };
+
+  const manejarPointerCancel = (evento: PointerEvent<HTMLLIElement>) => {
+    inicio.current = null;
+    arrastrandoRef.current = false;
+    setArrastrando(false);
+    if (evento.currentTarget.hasPointerCapture(evento.pointerId)) {
+      evento.currentTarget.releasePointerCapture(evento.pointerId);
+    }
+    onCancelarArrastre();
+  };
+
   return (
     <li
+      onPointerDown={manejarPointerDown}
+      onPointerMove={manejarPointerMove}
+      onPointerUp={manejarPointerUp}
+      onPointerCancel={manejarPointerCancel}
       className={cx(
         estilos.item,
         ACENTO_POR_PRIORIDAD[tarea.prioridad],
+        'cursor-grab select-none active:cursor-grabbing',
+        arrastrando && 'cursor-grabbing opacity-50',
         tarea.completada
           ? 'flex flex-col gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja opacity-60 transition-all duration-200 sm:flex-row sm:items-start'
           : 'flex animate-rise-in flex-col gap-3 rounded-lg border border-borde bg-superficie p-4 shadow-baja transition-all duration-200 hover:-translate-y-0.5 hover:border-primario/40 hover:shadow-media sm:flex-row sm:items-start',
       )}
     >
       <div className="flex items-center gap-3">
+        <span
+          className="hidden shrink-0 text-texto-atenuado sm:flex"
+          aria-hidden="true"
+        >
+          <GripVertical className="h-4 w-4" />
+        </span>
         <input
           type="checkbox"
           className="h-4 w-4 shrink-0 accent-primario"
@@ -162,3 +240,5 @@ export function ItemTarea({ tarea, seleccionada, onCambiarSeleccion, onEditar }:
     </li>
   );
 }
+
+export const ItemTarea = memo(ItemTareaBase);

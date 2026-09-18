@@ -43,6 +43,8 @@ export const es = {
   tarea: {
     misTareas: 'Mis tareas',
     nuevaTarea: 'Nueva tarea',
+    exportarCsv: 'Descargar CSV',
+    exportarJson: 'Descargar JSON',
     tituloNueva: 'Nueva tarea',
     tituloEditar: 'Editar tarea',
     titulo: 'Título',
@@ -103,6 +105,9 @@ export const es = {
     moverCategoria: 'Categoría…',
     categoriaLoteAria: 'Mover de categoría en lote',
     vacio: 'No hay tareas que coincidan. ¡Crea una nueva!',
+    soltarEliminar: 'Suelta aquí para eliminar',
+    soltarCompletar: 'Suelta aquí para completar',
+    soltarReabrir: 'Suelta aquí para reabrir',
   },
   prioridades: {
     1: 'Urgente',

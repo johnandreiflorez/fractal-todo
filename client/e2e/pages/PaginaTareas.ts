@@ -39,6 +39,18 @@ export class PaginaTareas extends Pagina {
     await this.botonNuevaTarea().click();
   }
 
+  botonExportarCsv(): Locator {
+    return this.main().getByRole('button', {
+      name: this.t('tarea.exportarCsv'),
+    });
+  }
+
+  botonExportarJson(): Locator {
+    return this.main().getByRole('button', {
+      name: this.t('tarea.exportarJson'),
+    });
+  }
+
   item(titulo: string): Locator {
     const conTitulo = this.pagina.getByText(titulo, { exact: true });
     return this.lista().getByRole('listitem').filter({ has: conTitulo });
@@ -133,5 +145,53 @@ export class PaginaTareas extends Pagina {
   async ordenarPor(campo: CampoOrden, direccion: 'asc' | 'desc'): Promise<void> {
     await this.controlConClave('tarea.ordenarPor').selectOption(campo);
     await this.controlConClave('tarea.direccionAria').selectOption(direccion);
+  }
+
+  async presionarAtajo(teclas: string): Promise<void> {
+    await this.pagina.keyboard.press(teclas);
+  }
+
+  zonaArrastre(zona: 'eliminar' | 'estado'): Locator {
+    return this.pagina.locator(`[data-zona="${zona}"]`);
+  }
+
+  fantasmaArrastre(): Locator {
+    return this.pagina.locator('[data-fantasma="true"]');
+  }
+
+  async iniciarArrastre(titulo: string): Promise<void> {
+    const caja = await this.item(titulo).boundingBox();
+    if (!caja) {
+      throw new Error(`No se pudo medir la tarea "${titulo}"`);
+    }
+    await this.pagina.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 2);
+    await this.pagina.mouse.down();
+    await this.pagina.mouse.move(caja.x + caja.width / 2 + 24, caja.y + caja.height / 2, {
+      steps: 3,
+    });
+    await expect(this.fantasmaArrastre()).toBeVisible();
+  }
+
+  async moverPunteroA(x: number, y: number): Promise<void> {
+    await this.pagina.mouse.move(x, y, { steps: 8 });
+  }
+
+  async soltarPuntero(): Promise<void> {
+    await this.pagina.mouse.up();
+  }
+
+  async arrastrarTareaA(titulo: string, zona: 'eliminar' | 'estado'): Promise<void> {
+    await this.iniciarArrastre(titulo);
+    const objetivo = this.zonaArrastre(zona);
+    await expect(objetivo).toBeVisible();
+    const cajaZona = await objetivo.boundingBox();
+    if (!cajaZona) {
+      throw new Error(`No se pudo medir la zona "${zona}"`);
+    }
+    await this.moverPunteroA(
+      cajaZona.x + cajaZona.width / 2,
+      cajaZona.y + cajaZona.height / 2,
+    );
+    await this.soltarPuntero();
   }
 }
