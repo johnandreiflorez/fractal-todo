@@ -233,6 +233,7 @@ El repo incluye `render.yaml` en la raíz, listo para el flujo *Blueprint* de Re
    psql "postgresql://USUARIO:CLAVE@HOST/BD?sslmode=require" -f server/sql/seed.sql
    ```
 2. **API**: despliega `server/` usando el `Dockerfile` incluido (Render → *New Web Service* → Docker, con contexto de build `server/`; o Railway → *Deploy from repo* subcarpeta `server`). Health check: `GET /api/health`.
+   Si usas un Web Service de tipo Node en Render, configura `npm ci --include=dev && npm run build` como Build Command y `npm run start` como Start Command. `--include=dev` es necesario porque TypeScript necesita los paquetes `@types/*` durante la compilación; no se requieren en runtime.
 3. **Variables de entorno** del servicio:
    - `DATABASE_URL` → cadena de conexión con `sslmode=require`.
    - `JWT_SECRET` → al menos 32 caracteres aleatorios.
