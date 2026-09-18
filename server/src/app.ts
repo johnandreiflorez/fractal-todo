@@ -48,6 +48,14 @@ app.use(
 );
 
 app.use('/api', apiLimiter);
+app.get('/', (_req, res) => {
+  res.json({
+    nombre: 'Fractal Tasks API',
+    estado: 'ok',
+    health: '/api/health',
+    documentacion: '/api/docs',
+  });
+});
 app.get('/api/openapi.json', (_req, res) => {
   res.json(openapiDocument);
 });
