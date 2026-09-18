@@ -113,3 +113,15 @@ export const ordenarTareasPor = (
     const tareas = new PaginaTareas(actor.pagina(), actor.t);
     await tareas.ordenarPor(campo, direccion);
   });
+
+export const presionarAtajo = (teclas: string) =>
+  tarea(`presionar el atajo "${teclas}"`, async (actor) => {
+    const tareas = new PaginaTareas(actor.pagina(), actor.t);
+    await tareas.presionarAtajo(teclas);
+  });
+
+export const arrastrarTareaA = (titulo: string, zona: 'eliminar' | 'estado') =>
+  tarea(`arrastrar la tarea "${titulo}" a la zona "${zona}"`, async (actor) => {
+    const tareas = new PaginaTareas(actor.pagina(), actor.t);
+    await tareas.arrastrarTareaA(titulo, zona);
+  });

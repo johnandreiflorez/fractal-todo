@@ -1,0 +1,51 @@
+/*
+ * Barras de progreso del panel de estadísticas.
+ * El ancho de cada relleno es dinámico (dato), pero todos los colores
+ * provienen de tokens semánticos, por lo que respetan tema claro/oscuro.
+ */
+
+.barra {
+  position: relative;
+  height: 0.5rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: rgb(var(--superficie-2));
+}
+
+.relleno {
+  height: 100%;
+  border-radius: inherit;
+  background-color: rgb(var(--primario));
+  transition: width 300ms ease;
+}
+
+.rellenoPrioridad {
+  background-color: rgb(var(--acento));
+}
+
+.p1 {
+  --acento: var(--peligro);
+}
+
+.p2 {
+  --acento: var(--atencion);
+}
+
+.p3 {
+  --acento: var(--informacion);
+}
+
+.p4 {
+  --acento: var(--primario);
+}
+
+.p5 {
+  --acento: var(--exito);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .relleno {
+    transition: none;
+  }
+}

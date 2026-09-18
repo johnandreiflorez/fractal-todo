@@ -7,6 +7,7 @@ import {
 } from 'react';
 import type { ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { urlTiempoReal } from '../config/api.js';
 import { useAuth } from '../hooks/useAuth.js';
 import { obtenerToken } from '../utils/authStorage.js';
 import { esMensajeCambio } from '../tipos/index.js';
@@ -22,11 +23,6 @@ const ContextoTiempoReal = createContext<ContextoTiempoRealType | null>(null);
 const RECONEXION_BASE_MS = 1_000;
 const RECONEXION_MAX_MS = 15_000;
 const CODIGO_NO_AUTORIZADO = 4001;
-
-function urlTiempoReal(token: string): string {
-  const protocolo = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  return `${protocolo}//${window.location.host}/ws?token=${encodeURIComponent(token)}`;
-}
 
 export function ProveedorTiempoReal({ children }: { children: ReactNode }) {
   const { usuario } = useAuth();

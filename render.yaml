@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: fractal-todo-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - server/**
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 8h
+      # Cadena de conexión de Neon (postgresql://...?sslmode=require).
+      # Render la pedirá al crear el Blueprint.
+      - key: DATABASE_URL
+        sync: false
+      # Origen(es) del frontend web, separados por coma. Los orígenes de
+      # Capacitor se permiten siempre. Déjalo vacío si solo usas el APK.
+      - key: CORS_ORIGIN
+        sync: false

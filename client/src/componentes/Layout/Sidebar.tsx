@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react';
 import { mensajeDeError } from '../../api/cliente.js';
 import { BotonIcono, IndicadorCarga } from '../../design-system/index.js';
+import { useAtajosTeclado } from '../../hooks/useAtajosTeclado.js';
 import { useCategorias, useEliminarCategoria } from '../../hooks/useCategorias.js';
 import type { Categoria } from '../../tipos/index.js';
 import { FormularioCategoria } from '../Categoria/FormularioCategoria.js';
@@ -32,6 +33,19 @@ export function Sidebar() {
     setCategoriaEnEdicion((actual) => (actual?.id === categoria.id ? null : categoria));
   };
 
+  useAtajosTeclado(
+    [
+      {
+        teclas: 'c',
+        accion: () => {
+          setCrearAbierto(true);
+          setCategoriaEnEdicion(null);
+        },
+      },
+    ],
+    !crearAbierto && !categoriaEnEdicion,
+  );
+
   return (
     <div className="rounded-xl border border-borde bg-superficie p-4 shadow-baja transition-all duration-200 hover:shadow-media">
       <div className="mb-4 flex items-center justify-between gap-2">
@@ -40,6 +54,7 @@ export function Sidebar() {
         </h2>
         <BotonIcono
           etiqueta={t('lateral.nuevaCategoria')}
+          aria-keyshortcuts="C"
           onClick={() => {
             setCrearAbierto((actual) => !actual);
             setCategoriaEnEdicion(null);

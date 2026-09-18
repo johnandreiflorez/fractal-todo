@@ -7,6 +7,7 @@ import { authRouter } from './routes/auth.routes.js';
 import { tareasRouter } from './routes/tareas.routes.js';
 import { categoriasRouter } from './routes/categorias.routes.js';
 import { etiquetasRouter } from './routes/etiquetas.routes.js';
+import { estadisticasRouter } from './routes/estadisticas.routes.js';
 import { apiLimiter } from './middlewares/rateLimit.js';
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
 import swaggerUi from 'swagger-ui-express';
@@ -14,11 +15,28 @@ import { openapiDocument } from './docs/openapi.js';
 
 export const app = express();
 
+const ORIGENES_CAPACITOR = [
+  'capacitor://localhost',
+  'http://localhost',
+  'https://localhost',
+];
+const origenesConfigurados = env.CORS_ORIGIN.split(',')
+  .map((origen) => origen.trim())
+  .filter((origen) => origen.length > 0);
+const permitirTodos = origenesConfigurados.includes('*');
+const origenesPermitidos = new Set([...origenesConfigurados, ...ORIGENES_CAPACITOR]);
+
 app.disable('x-powered-by');
 app.use(helmet());
 app.use(
   cors({
-    origin: env.CORS_ORIGIN,
+    origin(origin, callback) {
+      if (permitirTodos || !origin || origenesPermitidos.has(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(null, false);
+    },
     credentials: true,
   }),
 );
@@ -38,6 +56,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/tareas', tareasRouter);
 app.use('/api/categorias', categoriasRouter);
 app.use('/api/etiquetas', etiquetasRouter);
+app.use('/api/estadisticas', estadisticasRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ estado: 'ok', timestamp: new Date().toISOString() });

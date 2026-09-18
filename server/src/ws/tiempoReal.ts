@@ -2,7 +2,7 @@ import type { IncomingMessage, Server } from 'node:http';
 import { WebSocket, WebSocketServer } from 'ws';
 import { verificarAccessToken } from '../utils/jwt.js';
 
-export type RecursoTiempoReal = 'tareas' | 'categorias' | 'etiquetas';
+export type RecursoTiempoReal = 'tareas' | 'categorias' | 'etiquetas' | 'estadisticas';
 
 export interface MensajeCambio {
   tipo: 'cambio';

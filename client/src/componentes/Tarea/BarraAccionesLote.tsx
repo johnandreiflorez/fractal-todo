@@ -1,38 +1,38 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { mensajeDeError } from '../../api/cliente.js';
-import { Button, Selector } from '../../design-system/index.js';
+import { Button, Selector, Tecla } from '../../design-system/index.js';
 import { useCategorias } from '../../hooks/useCategorias.js';
-import {
-  useActualizarTareasEnLote,
-  useEliminarTareasEnLote,
-} from '../../hooks/useTareas.js';
 
 interface Props {
   ids: number[];
-  onListo: () => void;
+  ocupado: boolean;
+  cargandoCompletar: boolean;
+  cargandoReabrir: boolean;
+  cargandoEliminar: boolean;
+  error: string | null;
+  onCompletar: () => void;
+  onReabrir: () => void;
+  onAsignarPrioridad: (prioridad: number) => void;
+  onMoverCategoria: (categoriaId: number | null) => void;
+  onEliminar: () => void;
 }
 
 const PRIORIDADES = ['1', '2', '3', '4', '5'] as const;
 
-export function BarraAccionesLote({ ids, onListo }: Props) {
+export function BarraAccionesLote({
+  ids,
+  ocupado,
+  cargandoCompletar,
+  cargandoReabrir,
+  cargandoEliminar,
+  error,
+  onCompletar,
+  onReabrir,
+  onAsignarPrioridad,
+  onMoverCategoria,
+  onEliminar,
+}: Props) {
   const { t } = useTranslation();
-  const actualizarEnLote = useActualizarTareasEnLote();
-  const eliminarEnLote = useEliminarTareasEnLote();
   const { data: categorias } = useCategorias();
-  const [error, setError] = useState<string | null>(null);
-
-  const ocupado = actualizarEnLote.isPending || eliminarEnLote.isPending;
-
-  const ejecutar = async (accion: () => Promise<unknown>) => {
-    try {
-      setError(null);
-      await accion();
-      onListo();
-    } catch (e) {
-      setError(mensajeDeError(e));
-    }
-  };
 
   return (
     <div
@@ -47,28 +47,22 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
       <Button
         tamano="sm"
         disabled={ocupado}
-        cargando={actualizarEnLote.isPending && actualizarEnLote.variables?.cambios.completada === true}
-        onClick={() =>
-          void ejecutar(() =>
-            actualizarEnLote.mutateAsync({ ids, cambios: { completada: true } }),
-          )
-        }
+        cargando={cargandoCompletar}
+        aria-keyshortcuts="X"
+        onClick={onCompletar}
       >
-        {t('tarea.completar')}
+        {t('tarea.completar')} <Tecla>X</Tecla>
       </Button>
 
       <Button
         tamano="sm"
         variante="secundario"
         disabled={ocupado}
-        cargando={actualizarEnLote.isPending && actualizarEnLote.variables?.cambios.completada === false}
-        onClick={() =>
-          void ejecutar(() =>
-            actualizarEnLote.mutateAsync({ ids, cambios: { completada: false } }),
-          )
-        }
+        cargando={cargandoReabrir}
+        aria-keyshortcuts="Shift+X"
+        onClick={onReabrir}
       >
-        {t('tarea.reabrir')}
+        {t('tarea.reabrir')} <Tecla>⇧X</Tecla>
       </Button>
 
       <Selector
@@ -78,11 +72,7 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
         aria-label={t('tarea.prioridadLoteAria')}
         onChange={(evento) => {
           const prioridad = Number(evento.target.value);
-          if (prioridad >= 1 && prioridad <= 5) {
-            void ejecutar(() =>
-              actualizarEnLote.mutateAsync({ ids, cambios: { prioridad } }),
-            );
-          }
+          if (prioridad >= 1 && prioridad <= 5) onAsignarPrioridad(prioridad);
         }}
       >
         <option value="" disabled>
@@ -103,12 +93,7 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
         onChange={(evento) => {
           const texto = evento.target.value;
           if (texto === '') return;
-          void ejecutar(() =>
-            actualizarEnLote.mutateAsync({
-              ids,
-              cambios: { categoria_id: texto === 'null' ? null : Number(texto) },
-            }),
-          );
+          onMoverCategoria(texto === 'null' ? null : Number(texto));
         }}
       >
         <option value="" disabled>
@@ -126,14 +111,11 @@ export function BarraAccionesLote({ ids, onListo }: Props) {
         tamano="sm"
         variante="peligro"
         disabled={ocupado}
-        cargando={eliminarEnLote.isPending}
-        onClick={() => {
-          if (window.confirm(t('tarea.eliminarConfirmLote', { count: ids.length }))) {
-            void ejecutar(() => eliminarEnLote.mutateAsync(ids));
-          }
-        }}
+        cargando={cargandoEliminar}
+        aria-keyshortcuts="Delete"
+        onClick={onEliminar}
       >
-        {t('tarea.eliminar')}
+        {t('tarea.eliminar')} <Tecla>Del</Tecla>
       </Button>
 
       {error && <span className="w-full text-sm text-peligro-fuerte">{error}</span>}

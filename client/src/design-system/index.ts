@@ -12,4 +12,5 @@ export { Selector } from './Selector.js';
 export { IndicadorCarga } from './IndicadorCarga.js';
 export { MensajeError } from './MensajeError.js';
 export { EstadoVacio } from './EstadoVacio.js';
+export { Tecla } from './Tecla.js';
 export { cx } from './cx.js';
